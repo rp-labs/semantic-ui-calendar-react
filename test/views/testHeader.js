@@ -1,9 +1,7 @@
-import setup from '../setup';
 import { assert } from 'chai';
 import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {
-  mount,
   shallow,
 } from 'enzyme';
 import sinon from 'sinon';
@@ -23,7 +21,7 @@ describe('its ok', function() {
 describe('<Header />', () => {
   const onPrevPageBtnClick = sinon.fake();
   it('calls onPrevPageBtnClick', () => {
-    const wrapper = mount(
+    const wrapper = shallow(
       <Header
         hasPrevPage
         onPrevPageBtnClick={onPrevPageBtnClick} />
@@ -37,7 +35,7 @@ describe('<Header />', () => {
 describe('<Header />', () => {
   const onNextPageBtnClick = sinon.fake();
   it('calls onNextPageBtnClick', () => {
-    const wrapper = mount(
+    const wrapper = shallow(
       <Header
         hasNextPage
         onNextPageBtnClick={onNextPageBtnClick} />
