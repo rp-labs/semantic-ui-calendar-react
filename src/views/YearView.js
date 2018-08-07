@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
 
+import Calendar from './Calendar';
 import Header from './CalendarHeader/Header';
 import Body from './CalendarBody/Body';
 
 function YearView(props) {
   return (
-    <Table
-      unstackable
-      celled
-      textAlign="center">
+    <Calendar>
       <Header />
       <Body />
-    </Table>
+    </Calendar>
   );
 }
 
