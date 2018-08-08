@@ -7,7 +7,8 @@ import Calendar from './Calendar';
 import Header from './CalendarHeader/Header';
 import Body from './CalendarBody/Body';
 
-const DAY_CALENDAR_ROW_WIDTH = '7';
+export const DAY_CALENDAR_ROW_WIDTH = '7';
+export const WEEKS_IN_DAY_VIEW = 6;
 
 function DayView(props) {
   const {
@@ -57,7 +58,7 @@ DayView.propTypes = {
   /** Whether to display next page button as active or disabled. */
   hasNextPage: PropTypes.bool.isRequired,
   /** A date that is displayed in calendar header. */
-  currentDate: PropTypes.instanceOf(moment).isRequired,
+  currentDate: PropTypes.string.isRequired,
   /** Called after click on calendar header. */
   onHeaderClick: PropTypes.func,
   /** An array of day positions to display as disabled. */

@@ -23,9 +23,14 @@ function buildRows(data/*array*/, width/*number*/) {
   return rows;
 }
 
-function isActive(rowIndex, rowWidth, colIndex, activeIndex) {
-  if (_.isNil(activeIndex)) return false;
-  return rowIndex * rowWidth + colIndex === activeIndex;
+function isActive(rowIndex, rowWidth, colIndex, active) {
+  if (_.isNil(active)) return false;
+  if (_.isArray(active)) {
+    for (let i = 0; i < active.length; i++) {
+      if (rowIndex * rowWidth + colIndex === active[i]) return true;
+    }
+  }
+  return rowIndex * rowWidth + colIndex === active;
 }
 
 function isDisabled(rowIndex, rowWidth, colIndex, disabledIndexes) {
@@ -88,8 +93,13 @@ Body.propTypes = {
   ).isRequired,
   /** Called after a click on calendar's cell. */
   onCellClick: PropTypes.func,
-  /** Index of an element in `data` array that should be displayed as active. */
-  active: PropTypes.number,
+  /** Index of an element (or array of indexes) in `data` array that should be displayed as active. */
+  active: PropTypes.oneOfType(
+    [
+      PropTypes.number,
+      PropTypes.arrayOf(PropTypes.number),
+    ]
+  ),
   /** Array of element indexes in `data` array that should be displayed as disabled. */
   disabled: PropTypes.arrayOf(PropTypes.number),
 };
