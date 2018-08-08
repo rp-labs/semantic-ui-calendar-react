@@ -5,7 +5,6 @@ import { Table } from 'semantic-ui-react';
 
 import Header from './CalendarHeader/Header';
 import Body from './CalendarBody/Body';
-import { DayPositionType } from './DayView';
 
 function DatesRangeView(props) {
   return (
@@ -37,12 +36,12 @@ DatesRangeView.propTypes = {
   /** Called after click on calendar header. */
   onHeaderClick: PropTypes.func,
   /** An array of day positions to display as disabled. */
-  disabled: PropTypes.arrayOf(DayPositionType),
+  disabled: PropTypes.arrayOf(PropTypes.number),
   /** Start and end of a range of day positions to display as active. */
   active: PropTypes.shape(
     { 
-      start: DayPositionType,
-      end: DayPositionType,
+      start: PropTypes.number,
+      end: PropTypes.number,
     }
   ),
 };

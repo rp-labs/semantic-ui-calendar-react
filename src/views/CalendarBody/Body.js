@@ -10,6 +10,10 @@ const cellStyleWidth3 = {
   minWidth: '7em'
 };
 
+const cellStyleWidth7 = {
+  width: '14.285714%'
+};
+
 function buildRows(data/*array*/, width/*number*/) {
   const height = data.length / width;
   const rows = [];
@@ -35,6 +39,9 @@ function isDisabled(rowIndex, rowWidth, colIndex, disabledIndexes) {
 function getCellStyle(width) {
   if (width === '3') {
     return cellStyleWidth3;
+  }
+  if (width === '7') {
+    return cellStyleWidth7;
   }
   return;
 }

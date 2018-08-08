@@ -32,8 +32,15 @@ describe('<HeaderWeeks />', () => {
     const wrapper = shallow(<HeaderWeeks />);
     wrapper.children().forEach((child) => {
       const style = child.prop('style');
-      assert.equal(_.keys(style).length, 1, 'each child of top node has prop style: { border: "none" }');
-      assert.equal(style.border, 'none', 'each child of top node has prop style: { border: "none" }');
+      assert.equal(_.keys(style).length, 2, 'each child of top node has prop style: { border, borderBottom }');
+      assert.equal(
+        style.border,
+        'none',
+        'each child of top node has prop style: { border: "none" }');
+      assert.equal(
+        style.borderBottom,
+        '1px solid rgba(34,36,38,.1)',
+        'each child of top node has prop style: { borderBottom: "1px solid rgba(34,36,38,.1)" }');
     });
   });
 });
