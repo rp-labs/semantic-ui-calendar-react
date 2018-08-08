@@ -46,7 +46,7 @@ function MonthView(props) {
 
 MonthView.propTypes = {
   /** Array of months to fill a calendar with. */
-  months: PropTypes.arrayOf(PropTypes.string),
+  months: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** Wether to display header or not. */
   hasHeader: PropTypes.bool.isRequired,
   /** Called after click on month. */

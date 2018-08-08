@@ -46,7 +46,7 @@ function HourView(props) {
 
 HourView.propTypes = {
   /** Array of hours to fill a calendar with. */
-  hours: PropTypes.arrayOf(PropTypes.string),
+  hours: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** Wether to display header or not. */
   hasHeader: PropTypes.bool.isRequired,
   /** Called after click on hour. */
