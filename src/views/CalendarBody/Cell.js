@@ -30,10 +30,14 @@ class Cell extends React.Component {
 
   render() {
     const rest = getUnhandledProps(Cell, this.props);
+    const style = { 
+      ...this.props.style,
+      ...(this.state.hoverCell? hoverCellStyles : undefined),
+    };
     return (
       <Table.Cell
         { ...rest }
-        style={this.state.hoverCell? hoverCellStyles : undefined}
+        style={style}
         onMouseOver={this.toggleHoverCell}
         onMouseLeave={this.toggleHoverCell}
         onClick={this.onCellClick}>
@@ -53,6 +57,7 @@ Cell.propTypes = {
   ).isRequired,
   /** Called after click on a cell. */
   onClick: PropTypes.func,
+  style: PropTypes.object,
 };
 
 export default Cell;
