@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
-import { Table } from 'semantic-ui-react';
 import _ from 'lodash';
 
 import Calendar from './Calendar';

@@ -10,6 +10,10 @@ const cellStyleWidth3 = {
   minWidth: '7em'
 };
 
+const cellStyleWidth4 = {
+  width: '25%'
+};
+
 const cellStyleWidth7 = {
   width: '14.285714%'
 };
@@ -44,6 +48,9 @@ function isDisabled(rowIndex, rowWidth, colIndex, disabledIndexes) {
 function getCellStyle(width) {
   if (width === '3') {
     return cellStyleWidth3;
+  }
+  if (width === '4') {
+    return cellStyleWidth4;
   }
   if (width === '7') {
     return cellStyleWidth7;

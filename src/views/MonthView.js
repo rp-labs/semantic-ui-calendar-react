@@ -1,7 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'semantic-ui-react';
-import moment from 'moment';
 
 import Calendar from './Calendar';
 import Header from './CalendarHeader/Header';
@@ -9,12 +7,9 @@ import Body from './CalendarBody/Body';
 
 const MONTH_CALENDAR_ROW_WIDTH = '3';
 
-function getMonths() {
-  return moment.monthsShort();
-}
-
 function MonthView(props) {
   const {
+    months,
     hasHeader,
     onMonthClick,
     onNextPageBtnClick,
@@ -41,7 +36,7 @@ function MonthView(props) {
       { hasHeader && <Header { ...headerProps } /> }
       <Body
         width={MONTH_CALENDAR_ROW_WIDTH}
-        data={getMonths()}
+        data={months}
         onCellClick={onMonthClick}
         active={active}
         disabled={disabled} />
@@ -50,6 +45,8 @@ function MonthView(props) {
 }
 
 MonthView.propTypes = {
+  /** Array of months to fill a calendar with. */
+  months: PropTypes.arrayOf(PropTypes.string),
   /** Wether to display header or not. */
   hasHeader: PropTypes.bool.isRequired,
   /** Called after click on month. */
