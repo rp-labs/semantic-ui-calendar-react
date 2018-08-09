@@ -44,7 +44,7 @@ function YearView(props) {
 
 YearView.propTypes = {
   /** An array of years to fill a calendar with. */
-  years: PropTypes.arrayOf(PropTypes.number).isRequired,
+  years: PropTypes.arrayOf(PropTypes.string).isRequired,
   /** Called after click on next page button. */
   onNextPageBtnClick: PropTypes.func.isRequired,
   /** Called after click on previous page button. */
