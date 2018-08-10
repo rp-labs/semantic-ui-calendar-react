@@ -64,11 +64,31 @@ class YearPicker extends React.Component {
   }
 
   getDisabledYears() {
+    let disabled = [];
+    const years = this.buildYears();
     if (_.isArray(this.props.disable)) {
-      const years = this.buildYears();
-      return this.props.disable
-        .map(yearMoment => years.indexOf(yearMoment.year().toString()))
-        .filter((index) => index >= 0);
+      disabled = disabled.concat(
+        this.props.disable
+          .filter(yearMoment => _.includes(years, yearMoment.year().toString()))
+          .map(yearMoment => years.indexOf(yearMoment.year().toString()))
+      );
+    }
+    if (!_.isNil(this.props.maxDate)) {
+      if (_.includes(years, this.props.maxDate.year().toString())) {
+        disabled = disabled.concat(
+          _.range(years.indexOf(this.props.maxDate.year().toString()) + 1, years.length)
+        );
+      }
+    }
+    if (!_.isNil(this.props.minDate)) {
+      if (_.includes(years, this.props.minDate.year().toString())) {
+        disabled = disabled.concat(
+          _.range(0, years.indexOf(this.props.minDate.year().toString()))
+        );
+      }
+    }
+    if (disabled.length > 0) {
+      return _.uniq(disabled);
     }
   }
 
