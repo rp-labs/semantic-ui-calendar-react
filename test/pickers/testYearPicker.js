@@ -82,12 +82,20 @@ describe('<YearPicker />: buildYears', function() {
 describe('<YearPicker />: getActiveYear', function() {
   it.only('works properly when`value` prop provided', () => {
     const date = moment('2015-05-01');
+    /*
+    [
+      '2015', '2016', '2017',
+      '2018', '2019', '2020',
+      '2021', '2022', '2023',
+      '2024', '2025', '2026',
+    ]
+    */
     const wrapper = shallow(<YearPicker
       initializeWith={date}
       value={moment('2016-01-01')} />);
     assert(_.isFunction(wrapper.instance().getActiveYear), 'has the method');
     assert(_.isNumber(wrapper.instance().getActiveYear()), 'method returns number');
-    assert.equal(wrapper.instance().getActiveYear(), 2016, 'method returns active year given in `value` prop');
+    assert.equal(wrapper.instance().getActiveYear(), 1, 'method returns active year index');
   });
 
   it.only('works properly when `value` prop is undefined', () => {

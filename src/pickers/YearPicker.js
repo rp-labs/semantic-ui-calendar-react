@@ -55,7 +55,11 @@ class YearPicker extends React.Component {
 
   getActiveYear() {
     if (!_.isNil(this.props.value)) {
-      return this.props.value.year();
+      const years = this.buildYears();
+      const yearIndex = years.indexOf(this.props.value.year().toString());
+      if (yearIndex >= 0) {
+        return yearIndex;
+      }
     }
   }
 
