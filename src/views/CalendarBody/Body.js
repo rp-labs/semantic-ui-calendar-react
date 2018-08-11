@@ -73,7 +73,7 @@ function Body(props) {
           style={getCellStyle(width)}
           active={isActive(rowIndex, parseInt(width), itemIndex, active)}
           disabled={isDisabled(rowIndex, parseInt(width), itemIndex, disabled)}
-          key={`${itemIndex}${item}`}
+          key={`${rowIndex * width + itemIndex}`}
           content={item}
           onClick={onCellClick} />
       )) }

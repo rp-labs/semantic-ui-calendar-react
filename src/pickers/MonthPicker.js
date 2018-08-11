@@ -172,7 +172,7 @@ class MonthPicker extends React.Component {
 MonthPicker.propTypes = {
   /** Called after month is selected. */
   onChange: PropTypes.func.isRequired,
-  /** A value for initializing moment picker's state. */
+  /** A value for initializing month picker's state. */
   initializeWith: PropTypes.instanceOf(moment).isRequired,
   /** Currently selected month. */
   value: PropTypes.instanceOf(moment),
