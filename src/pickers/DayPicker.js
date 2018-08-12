@@ -1,8 +1,42 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 
 import DayView from '../views/DayView';
+import { WEEKS_IN_DAY_VIEW } from '../views/DayView';
+
+export function getDaysArray(start/*number*/, brakepoints/*number[]*/, length) {
+  let currentDay = start;
+  const days = [];
+  let brakepointsLeft = brakepoints.slice();
+
+  while (! (days.length === length)) {
+    days.push(currentDay);
+    const bp = _.first(brakepointsLeft);
+    if (currentDay === bp) {
+      currentDay = 1;
+      brakepointsLeft = _.slice(brakepointsLeft, 1);
+    } else {
+      currentDay = currentDay + 1;
+    }
+  }
+  return days;
+}
+
+/** Return maximum 2 brakepoints. */
+export function getBrakepoints(date/*moment*/) {
+  const dateClone = date.clone();
+  const currentMonth = dateClone.month();
+  const brakepoints = [];
+
+  dateClone.startOf('month').startOf('week');
+  if (dateClone.month() !== currentMonth) {
+    brakepoints.push(dateClone.endOf('month').date());
+  }
+  brakepoints.push(dateClone.endOf('month').date());
+  return brakepoints;
+}
 
 class DayPicker extends React.Component {
   /*
