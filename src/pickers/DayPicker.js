@@ -4,7 +4,55 @@ import moment from 'moment';
 import _ from 'lodash';
 
 import DayView from '../views/DayView';
-import { WEEKS_IN_DAY_VIEW } from '../views/DayView';
+import { WEEKS_TO_DISPLAY } from '../views/DayView';
+
+export const isNextPageUnavailable = {
+  byDisable: (currentDate/*Moment*/, disabled/*Moment[]|undefined*/) => {
+    if (_.isNil(disabled)) return false;
+    const twoMonthsLater = currentDate.clone();
+    twoMonthsLater.add(2, 'month');
+    const nextMonth = currentDate.clone();
+    nextMonth.add(1, 'month');
+    const allDaysFromNextMonthDisabled = _.uniq(disabled
+      .filter(date => date.isBetween(currentDate, twoMonthsLater, 'month'))
+      .map(date => date.date())).length === nextMonth.daysInMonth();
+    if (allDaysFromNextMonthDisabled) {
+      return true;
+    }
+    return false;
+  },
+  byMaxDate: (currentDate/*Moment*/, maxDate/*Moment|undefined*/) => {
+    if (_.isNil(maxDate)) return false;
+    const lastDayInMonth = currentDate.clone();
+    lastDayInMonth.endOf('month');
+    if (lastDayInMonth.isSameOrAfter(maxDate)) return true;
+    return false;
+  }
+};
+
+export const isPrevPageUnavailable = {
+  byDisable: (currentDate/*Moment*/, disabled/*Moment[]|undefined*/) => {
+    if (_.isNil(disabled)) return false;
+    const twoMonthsEarlier = currentDate.clone();
+    twoMonthsEarlier.subtract(2, 'month');
+    const prevMonth = currentDate.clone();
+    prevMonth.subtract(1, 'month');
+    const allDaysFromPrevMonthDisabled = _.uniq(disabled
+      .filter(date => date.isBetween(twoMonthsEarlier, currentDate, 'month'))
+      .map(date => date.date())).length === prevMonth.daysInMonth();
+    if (allDaysFromPrevMonthDisabled) {
+      return true;
+    }
+    return false;
+  },
+  byMinDate: (currentDate/*Moment*/, minDate/*Moment|undefined*/) => {
+    if (_.isNil(minDate)) return false;
+    const firstDayInMonth = currentDate.clone();
+    firstDayInMonth.startOf('month');
+    if (firstDayInMonth.isSameOrBefore(minDate)) return true;
+    return false;
+  }
+};
 
 export function getDaysArray(start/*number*/, brakepoints/*number[]*/, length) {
   let currentDay = start;
@@ -38,6 +86,22 @@ export function getBrakepoints(date/*moment*/) {
   return brakepoints;
 }
 
+/*
+  return array of day positions that are not disabled by default
+*/
+export function getAnabledOnlyPositions(allDays/*string[]*/, date/*moment*/) {
+  const dateClone = date.clone();
+  const brakepoints = getBrakepoints(dateClone);
+  if (brakepoints.length === 1) {
+    return _.range(0, _.indexOf(allDays, brakepoints[0].toString()) + 1);
+  } else {
+    return _.range(
+      _.indexOf(allDays, brakepoints[0].toString()) + 1,
+      _.lastIndexOf(allDays, brakepoints[1].toString()) + 1
+    );
+  }
+}
+
 class DayPicker extends React.Component {
   /*
     Note:
@@ -53,50 +117,112 @@ class DayPicker extends React.Component {
   }
 
   buildDays() {
-    /*
-      build array of strings (days) for DayView to consume
-    */
+    const brakepoints = getBrakepoints(this.state.date);
+    const start = this.state.date.clone().startOf('month').startOf('week');
+    return getDaysArray(start.date(), brakepoints, WEEKS_TO_DISPLAY * 7).map((date) => date.toString());
   }
 
   getActiveDay() {
-    /*
-      return position of a day to display as active (number)
-    */
+    if (!_.isNil(this.props.value)) {
+      const active = this.buildDays().indexOf(this.props.value.date().toString());
+      if (active >= 0) {
+        return active;
+      }
+    }
   }
 
   getDisabledDays() {
-    /*
-      return array of day positions to display as disabled (number[])
-    */
+    const {
+      disable,
+      maxDate,
+      minDate,
+    } = this.props;
+    const dayPositions = _.range(WEEKS_TO_DISPLAY * 7);
+    const daysInCurrentMonthPositions = getAnabledOnlyPositions(this.buildDays(), this.state.date);
+    let disabledDays = dayPositions.filter((dayPosition) => !_.includes(daysInCurrentMonthPositions, dayPosition));
+    if (_.isArray(disable)) {
+      disabledDays = _.concat(
+        disabledDays,
+        disable
+          .filter(date => date.year() === this.state.date.year() && date.month() === this.state.date.month())
+          .map(date => date.date())
+          .map(date => daysInCurrentMonthPositions[date - 1])
+      );
+    }
+    if (!_.isNil(maxDate)) {
+      if (maxDate.year() === this.state.date.year() && maxDate.month() === this.state.date.month()) {
+        disabledDays = _.concat(
+          disabledDays,
+          _.range(1, daysInCurrentMonthPositions.length + 1).filter(date => date > maxDate.date())
+            .map((date) => daysInCurrentMonthPositions[date - 1])
+        );
+      }
+    }
+    if (!_.isNil(minDate)) {
+      if (minDate.year() === this.state.date.year() && minDate.month() === this.state.date.month()) {
+        disabledDays = _.concat(
+          disabledDays,
+          _.range(1, daysInCurrentMonthPositions.length + 1).filter(date => date < minDate.date())
+            .map((date) => daysInCurrentMonthPositions[date - 1])
+        );
+      }
+    }
+    return _.sortBy(_.uniq(disabledDays).filter((day) => !_.isNil(day)));
   }
 
   isNextPageAvailable() {
-    // bool
+    return !_.some([
+      isNextPageUnavailable.byDisable(this.state.date, this.props.disable),
+      isNextPageUnavailable.byMaxDate(this.state.date, this.props.maxDate),
+    ]);
   }
 
   isPrevPageAvailable() {
-    // bool
+    return !_.some([
+      isPrevPageUnavailable.byDisable(this.state.date, this.props.disable),
+      isPrevPageUnavailable.byMinDate(this.state.date, this.props.minDate),
+    ]);
   }
 
   getCurrentMonth() {
-    /*
-      produce a string for DayView to consume as currentDate
-    */
+    return this.state.date.format('MMMM YYYY');
   }
 
   handleChange = (e, { key, value }) => {
-    /*  
-      value is just a string like '1' or '31'
-      key represents clicked day position in array provided to DayView
-    */
+    // value is just a string like '1' or '31'
+    // key represents clicked day position in array provided to DayView
+    const currentMonthPositions = getAnabledOnlyPositions(this.buildDays(), this.state.date);
+    const inCurrentMonth = _.includes(currentMonthPositions, parseInt(key));
+    const inPrevMonth = parseInt(key) < currentMonthPositions[0];
+    const inNextMonth = parseInt(key) > _.last(currentMonthPositions);
+    const result = { year: this.state.date.year() };
+    if (inCurrentMonth) {
+      result.month = this.state.date.month();
+    }
+    if (inNextMonth) {
+      result.month = this.state.date.month() + 1;
+    }
+    if (inPrevMonth) {
+      result.month = this.state.date.month() - 1;
+    }
+    result.date = parseInt(value);
+    _.invoke(this.props, 'onChange', e, { ...this.props, value: result });
   }
 
   switchToNextPage = () => {
-    // shift 1 month forward
+    this.setState(({ date }) => {
+      const nextDate = date.clone();
+      nextDate.add(1, 'month');
+      return { date: nextDate };
+    });
   }
 
   switchToPrevPage = () => {
-    // shift 1 month backward
+    this.setState(({ date }) => {
+      const prevDate = date.clone();
+      prevDate.subtract(1, 'month');
+      return { date: prevDate };
+    });
   }
 
   render() {

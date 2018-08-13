@@ -6,11 +6,11 @@ import Calendar from './Calendar';
 import Header from './CalendarHeader/Header';
 import Body from './CalendarBody/Body';
 import {
-  WEEKS_IN_DAY_VIEW,
+  WEEKS_TO_DISPLAY,
   DAY_CALENDAR_ROW_WIDTH,
 } from './DayView';
 
-const DAY_POSITIONS = _.range(WEEKS_IN_DAY_VIEW * 7);
+const DAY_POSITIONS = _.range(WEEKS_TO_DISPLAY * 7);
 
 function getActive(start, end) {
   if (_.isNil(start) && _.isNil(end)) return;

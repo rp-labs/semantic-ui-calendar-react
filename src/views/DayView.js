@@ -6,7 +6,7 @@ import Header from './CalendarHeader/Header';
 import Body from './CalendarBody/Body';
 
 export const DAY_CALENDAR_ROW_WIDTH = '7';
-export const WEEKS_IN_DAY_VIEW = 6;
+export const WEEKS_TO_DISPLAY = 6;
 
 function DayView(props) {
   const {
