@@ -6,12 +6,13 @@ import _ from 'lodash';
 import YearView from '../views/YearView';
 import { getUnhandledProps } from '../lib';
 
-const YEARS_ARRAY_LENGTH = 3 * 4;
+const YEARS_ON_PAGE = 3 * 4;
+
 const isNextPageUnavailable = {
   byDisable: (lastOnPage/*number*/, disabledYears/*number[]|undefined*/) => {
     if (_.isNil(disabledYears)) return false;
     const firstOnNext = lastOnPage + 1;
-    return _.every(_.range(firstOnNext, firstOnNext + YEARS_ARRAY_LENGTH), year => disabledYears.indexOf(year) >= 0);
+    return _.every(_.range(firstOnNext, firstOnNext + YEARS_ON_PAGE), year => disabledYears.indexOf(year) >= 0);
   },
   byMaxDate: (lastOnPage/*number*/, maxDate/*number|undefined*/) => {
     if (_.isNil(maxDate)) return false;
@@ -22,7 +23,7 @@ const isNextPageUnavailable = {
 const isPrevPageUnavailable = {
   byDisable: (firstOnPage/*number*/, disabledYears/*number[]|undefined*/) => {
     if (_.isNil(disabledYears)) return false;
-    return _.every(_.range(firstOnPage - YEARS_ARRAY_LENGTH, firstOnPage), year => disabledYears.indexOf(year) >= 0);
+    return _.every(_.range(firstOnPage - YEARS_ON_PAGE, firstOnPage), year => disabledYears.indexOf(year) >= 0);
   },
   byMinDate: (firstOnPage/*number*/, minDate/*number|undefined*/) => {
     if (_.isNil(minDate)) return false;
@@ -47,7 +48,7 @@ class YearPicker extends React.Component {
   buildYears() {
     const years = [];
     const first = this.state.date.year();
-    for (let i = 0; i < YEARS_ARRAY_LENGTH; i++) {
+    for (let i = 0; i < YEARS_ON_PAGE; i++) {
       years[i] = (first + i).toString();
     }
     return years;
@@ -124,7 +125,7 @@ class YearPicker extends React.Component {
   switchToNextPage = () => {
     this.setState(({ date }) => {
       const nextDate = date.clone();
-      nextDate.add(YEARS_ARRAY_LENGTH, 'year');
+      nextDate.add(YEARS_ON_PAGE, 'year');
       return { date: nextDate };
     });
   }
@@ -132,7 +133,7 @@ class YearPicker extends React.Component {
   switchToPrevPage = () => {
     this.setState(({ date }) => {
       const prevDate = date.clone();
-      prevDate.subtract(YEARS_ARRAY_LENGTH, 'year');
+      prevDate.subtract(YEARS_ON_PAGE, 'year');
       return { date: prevDate };
     });
   }

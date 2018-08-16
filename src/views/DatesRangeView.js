@@ -79,17 +79,17 @@ DatesRangeView.propTypes = {
   currentDate: PropTypes.string.isRequired,
   /** Selected range that is displayed in calendar header. */
   selectedRange: PropTypes.string.isRequired,
-  /** Called after click on calendar header. */
-  onHeaderClick: PropTypes.func,
-  /** An array of day positions to display as disabled. */
-  disabled: PropTypes.arrayOf(PropTypes.number),
   /** Start and end of a range of day positions to display as active. */
   active: PropTypes.shape(
     { 
       start: PropTypes.number,
       end: PropTypes.number,
     }
-  ),
+  ).isRequired,
+  /** Called after click on calendar header. */
+  onHeaderClick: PropTypes.func,
+  /** An array of day positions to display as disabled. */
+  disabled: PropTypes.arrayOf(PropTypes.number),
 };
 
 DatesRangeView.defaultProps = {
