@@ -3,24 +3,9 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import _ from 'lodash';
 
-import HourView from '../views/HourView';
-import { getUnhandledProps } from '../lib';
-
-function buildHourStringWithSuffix(hour/*number*/, timeFormat) {
-  if (timeFormat === 'ampm') {
-    if (hour < 12) {
-      return `${hour === '00'? '12' : hour}:00 am`;
-    }
-    return `${hour}:00 pm`;
-  }
-  if (timeFormat === 'AMPM') {
-    if (hour < 12) {
-      return `${hour === '00'? '12' : hour}:00 AM`;
-    }
-    return `${hour}:00 PM`;
-  }
-  return `${hour}:00`;
-}
+import HourView from '../../views/HourView';
+import { getUnhandledProps } from '../../lib';
+import { buildTimeStringWithSuffix } from './sharedFunctions';
 
 class HourPicker extends React.Component {
   /*
@@ -39,7 +24,7 @@ class HourPicker extends React.Component {
   buildHours() {
     return _.range(0, 24).map((h) => {
       return `${h < 10? '0' : ''}${h}`;
-    }).map(hour => buildHourStringWithSuffix(hour, this.props.timeFormat));
+    }).map(hour => buildTimeStringWithSuffix(hour, '00', this.props.timeFormat));
   }
 
   getActiveHour() {

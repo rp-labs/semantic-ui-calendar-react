@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 
-import MinuteView from '../views/MinuteView';
+import MinuteView from '../../views/MinuteView';
+import { getUnhandledProps } from '../../lib';
+import { buildTimeStringWithSuffix } from './sharedFunctions';
 
 class MinutePicker extends React.Component {
   /*
@@ -16,6 +19,13 @@ class MinutePicker extends React.Component {
       /* moment instance */
       date: props.initializeWith.clone(),
     };
+  }
+
+  buildMinutes() {
+    const hour = this.state.date.hour() < 10? '0' + this.state.date.hour().toString() : this.state.date.hour().toString();
+    return _.range(0, 60, 5)
+      .map(minute => `${minute < 10? '0' : ''}${minute}`)
+      .map(minute => buildTimeStringWithSuffix(hour, minute, this.props.timeFormat));
   }
 
   getActiveMinute() {
@@ -47,8 +57,10 @@ class MinutePicker extends React.Component {
   }
 
   render() {
+    const rest = getUnhandledProps(MinutePicker, this.props);
     return (
-      <MinuteView />
+      <MinuteView
+        { ...rest } />
     );
   }
 }
@@ -68,6 +80,14 @@ MinutePicker.propTypes = {
   minDate: PropTypes.instanceOf(moment),
   /** Maximal date that could be selected. */
   maxDate: PropTypes.instanceOf(moment),
+  /** Time format. */
+  timeFormat: PropTypes.oneOf([
+    'ampm', 'AMPM', '24',
+  ]),
+};
+
+MinutePicker.defaultProps = {
+  timeFormat: '24',
 };
 
 export default MinutePicker;

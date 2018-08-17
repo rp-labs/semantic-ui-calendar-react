@@ -9,7 +9,7 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import HourPicker from '../../src/pickers/HourPicker';
+import HourPicker from '../../src/pickers/timePicker/HourPicker';
 import HourView from '../../src/views/HourView';
 
 Enzyme.configure({ adapter: new Adapter() });
@@ -86,8 +86,8 @@ describe('<HourPicker />: buildHours', () => {
       const shouldReturn = [
         '12:00 am', '01:00 am', '02:00 am', '03:00 am', '04:00 am', '05:00 am',
         '06:00 am', '07:00 am', '08:00 am', '09:00 am', '10:00 am', '11:00 am',
-        '12:00 pm', '13:00 pm', '14:00 pm', '15:00 pm', '16:00 pm', '17:00 pm',
-        '18:00 pm', '19:00 pm', '20:00 pm', '21:00 pm', '22:00 pm', '23:00 pm',
+        '12:00 pm', '01:00 pm', '02:00 pm', '03:00 pm', '04:00 pm', '05:00 pm',
+        '06:00 pm', '07:00 pm', '08:00 pm', '09:00 pm', '10:00 pm', '11:00 pm',
       ];
       assert(_.isArray(wrapper.instance().buildHours()), 'return array');
       assert.equal(wrapper.instance().buildHours().length, 24, 'return array of length 24');
@@ -105,8 +105,8 @@ describe('<HourPicker />: buildHours', () => {
       const shouldReturn = [
         '12:00 AM', '01:00 AM', '02:00 AM', '03:00 AM', '04:00 AM', '05:00 AM',
         '06:00 AM', '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
-        '12:00 PM', '13:00 PM', '14:00 PM', '15:00 PM', '16:00 PM', '17:00 PM',
-        '18:00 PM', '19:00 PM', '20:00 PM', '21:00 PM', '22:00 PM', '23:00 PM',
+        '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
+        '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM',
       ];
       assert(_.isArray(wrapper.instance().buildHours()), 'return array');
       assert.equal(wrapper.instance().buildHours().length, 24, 'return array of length 24');
