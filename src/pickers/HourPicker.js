@@ -1,8 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import _ from 'lodash';
 
 import HourView from '../views/HourView';
+import { getUnhandledProps } from '../lib';
+
+function buildHourStringWithSuffix(hour/*number*/, timeFormat) {
+  if (timeFormat === 'ampm') {
+    if (hour < 12) {
+      return `${hour === '00'? '12' : hour}:00 am`;
+    }
+    return `${hour}:00 pm`;
+  }
+  if (timeFormat === 'AMPM') {
+    if (hour < 12) {
+      return `${hour === '00'? '12' : hour}:00 AM`;
+    }
+    return `${hour}:00 PM`;
+  }
+  return `${hour}:00`;
+}
 
 class HourPicker extends React.Component {
   /*
@@ -18,41 +36,119 @@ class HourPicker extends React.Component {
     };
   }
 
+  buildHours() {
+    return _.range(0, 24).map((h) => {
+      return `${h < 10? '0' : ''}${h}`;
+    }).map(hour => buildHourStringWithSuffix(hour, this.props.timeFormat));
+  }
+
   getActiveHour() {
-    // produce active hour index
+    if (this.props.value) {
+      return this.props.value.hour();
+    }
   }
 
   isNextPageAvailable() {
-    // bool
+    const { maxDate } = this.props;
+    if (maxDate) {
+      return maxDate.isAfter(this.state.date, 'day');
+    }
+    return true;
   }
 
   isPrevPageAvailable() {
-    // bool
+    const { minDate } = this.props;
+    if (minDate) {
+      return minDate.isBefore(this.state.date, 'day');
+    }
+    return true;
   }
 
   getDisabledHours() {
-    // produce array of indexes for HourView to consume as `disabled`
+    const {
+      disable,
+      minDate,
+      maxDate,
+    } = this.props;
+    let disabledByDisable = [];
+    let disabledByMaxDate = [];
+    let disabledByMinDate = [];
+
+    if (_.isArray(disable)) {
+      disabledByDisable = _.concat(
+        disabledByDisable,
+        disable.filter(date => date.isSame(this.state.date, 'day'))
+          .map(date => date.hour())
+      );
+    }
+    if (minDate) {
+      if (minDate.isSame(this.state.date, 'day')) {
+        disabledByMinDate = _.concat(
+          disabledByMinDate,
+          _.range(0 , minDate.hour())
+        );
+      }
+    }
+    if (maxDate) {
+      if (maxDate.isSame(this.state.date, 'day')) {
+        disabledByMaxDate = _.concat(
+          disabledByMaxDate,
+          _.range(maxDate.hour() + 1, 24)
+        );
+      }
+    }
+    const result = _.sortBy(
+      _.uniq(
+        _.concat(disabledByDisable, disabledByMaxDate, disabledByMinDate)));
+    if (result.length > 0) {
+      return result;
+    }
   }
 
   getCurrentDate() {
-    // produce string for HourView to display in header
+    return this.state.date.format('MMMM DD, YYYY');
   }
 
   handleChange = (e, { value }) => {
-    // call onChange with { year, month, day, hour }
+    const data = {
+      year: this.state.date.year(),
+      month: this.state.date.month(),
+      date: this.state.date.date(),
+      hour: this.buildHours().indexOf(value),
+    };
+    _.invoke(this.props, 'onChange', e, { ...this.props, value: data });
   }
 
   switchToNextPage = () => {
-    // shift date 1 day forward
+    this.setState(({ date }) => {
+      const nextDate = date.clone();
+      nextDate.add(1, 'day');
+      return { date: nextDate };
+    });
   }
 
   switchToPrevPage = () => {
-    //shift date 1 day backward
+    this.setState(({ date }) => {
+      const prevDate = date.clone();
+      prevDate.subtract(1, 'day');
+      return { date: prevDate };
+    });
   }
 
   render() {
+    const rest = getUnhandledProps(HourPicker, this.props);
     return (
-      <HourView />
+      <HourView
+        { ...rest }
+        hours={this.buildHours()}
+        onNextPageBtnClick={this.switchToNextPage}
+        onPrevPageBtnClick={this.switchToPrevPage}
+        hasPrevPage={this.isPrevPageAvailable()}
+        hasNextPage={this.isNextPageAvailable()}
+        onHourClick={this.handleChange}
+        disabled={this.getDisabledHours()}
+        active={this.getActiveHour()}
+        currentDate={this.getCurrentDate()} />
     );
   }
 }
@@ -72,6 +168,14 @@ HourPicker.propTypes = {
   minDate: PropTypes.instanceOf(moment),
   /** Maximal date that could be selected. */
   maxDate: PropTypes.instanceOf(moment),
+  /** Time format. */
+  timeFormat: PropTypes.oneOf([
+    'ampm', 'AMPM', '24',
+  ]),
+};
+
+HourPicker.defaultProps = {
+  timeFormat: '24',
 };
 
 export default HourPicker;
