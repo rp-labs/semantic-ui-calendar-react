@@ -31,19 +31,18 @@ describe('<MinutePicker />', () => {
     const wrapper = shallow(<MinutePicker
       initializeWith={date} />);
     assert(wrapper.is(MinuteView), 'renders <MinuteView />');
-    // assert(_.isArray(wrapper.prop('hours')), 'provide array to `hours` prop on MinuteView');
-    // assert.equal(wrapper.prop('hours').length, 24, 'provide array of length 24 to `hours` prop on MinuteView');
-    // wrapper.prop('hours').forEach((hour) => {
-    //   assert(_.isString(hour), 'contains strings');
-    // });
-    // assert(_.isFunction(wrapper.prop('onNextPageBtnClick')), 'provide function for `onNextPageBtnClick` prop on MinuteView');
-    // assert(_.isFunction(wrapper.prop('onPrevPageBtnClick')), 'provide function for `onPrevPageBtnClick` prop on MinuteView');
-    // assert(_.isFunction(wrapper.prop('onHourClick')), 'provide function for `onHourClick` prop on MinuteView');
-    // assert(_.isBoolean(wrapper.prop('hasPrevPage')), 'provide boolean for `hasPrevPage` prop on MinuteView');
-    // assert(_.isBoolean(wrapper.prop('hasNextPage')), 'provide boolean for `hasNextPage` prop on MinuteView');
-    // assert(_.isString(wrapper.prop('currentDate')), 'provide string for `currentDate` prop on MinuteView');
-    // assert(_.has(wrapper.props(), 'active'), 'provide `active` prop to MinuteView');
-    // assert(_.has(wrapper.props(), 'disabled'), 'provide `disabled` prop to MinuteView');
+    assert(_.isArray(wrapper.prop('minutes')), 'provide array to `minutes` prop on MinuteView');
+    assert.equal(wrapper.prop('minutes').length, 12, 'provide array of length 12 to `minutes` prop on MinuteView');
+    wrapper.prop('minutes').forEach((hour) => {
+      assert(_.isString(hour), 'contains strings');
+    });
+    assert(_.isFunction(wrapper.prop('onNextPageBtnClick')), 'provide function for `onNextPageBtnClick` prop on MinuteView');
+    assert(_.isFunction(wrapper.prop('onPrevPageBtnClick')), 'provide function for `onPrevPageBtnClick` prop on MinuteView');
+    assert(_.isFunction(wrapper.prop('onMinuteClick')), 'provide function for `onMinuteClick` prop on MinuteView');
+    assert(_.isBoolean(wrapper.prop('hasPrevPage')), 'provide boolean for `hasPrevPage` prop on MinuteView');
+    assert(_.isBoolean(wrapper.prop('hasNextPage')), 'provide boolean for `hasNextPage` prop on MinuteView');
+    assert(_.isString(wrapper.prop('currentDate')), 'provide string for `currentDate` prop on MinuteView');
+    assert(_.has(wrapper.props(), 'active'), 'provide `active` prop to MinuteView');
   });
 
   it('pass unhandled props to <MinuteView />', () => {
@@ -111,227 +110,172 @@ describe('<MinutePicker />: buildMinutes', () => {
   });
 });
 
-// describe('<HourPicker />: getActiveHour', () => {
-//   const date = moment('2018-08-12');
+describe('<MinutePicker />: getActiveMinute', () => {
+  const date = moment('2018-08-12 10:00');
 
-//   it('return active hour', () => {
-//     const wrapper = shallow(<HourPicker
-//       value={moment({ hour: 15 })}
-//       initializeWith={date} />);
-//     /*
-//       [
-//         '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
-//         '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-//         '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
-//         '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
-//       ]
-//     */
-//     assert(_.isNumber(wrapper.instance().getActiveHour()), 'return number');
-//     assert.equal(wrapper.instance().getActiveHour(), 15, 'return active hour position number');
-//   });
-// });
+  it('return active minute position when value is not multiple of 5', () => {
+    const wrapper = shallow(<MinutePicker
+      value={moment({ hour: 10, minute: 17 })}
+      initializeWith={date} />);
+    /*
+      [
+        '10:00', '10:05', '10:10', '10:15', '10:20', '10:25',
+        '10:30', '10:35', '10:40', '10:45', '10:50', '10:55',
+      ]
+    */
+    assert(_.isNumber(wrapper.instance().getActiveMinute()), 'return number');
+    assert.equal(wrapper.instance().getActiveMinute(), 3, 'return active minute position number');
+  });
 
-// describe('<HourPicker />: getDisabledHours', () => {
-//   const date = moment('2018-08-12');
+  it('return active minute position when value is multiple of 5', () => {
+    const wrapper = shallow(<MinutePicker
+      value={moment({ hour: 10, minute: 20 })}
+      initializeWith={date} />);
+    /*
+      [
+        '10:00', '10:05', '10:10', '10:15', '10:20', '10:25',
+        '10:30', '10:35', '10:40', '10:45', '10:50', '10:55',
+      ]
+    */
+    assert(_.isNumber(wrapper.instance().getActiveMinute()), 'return number');
+    assert.equal(wrapper.instance().getActiveMinute(), 4, 'return active minute position number');
+  });
 
-//   describe('return disabled hour positions based on `disable` prop', () => {
-//     it('return disabled hour positions position numbers', () => {
-//       const wrapper = shallow(<HourPicker
-//         disable={[moment('2018-08-12 12:00'), moment('2018-08-12 14:00')]}
-//         initializeWith={date} />);
+  it('return active minute position when value is 59', () => {
+    const wrapper = shallow(<MinutePicker
+      value={moment({ hour: 10, minute: 59 })}
+      initializeWith={date} />);
+    /*
+      [
+        '10:00', '10:05', '10:10', '10:15', '10:20', '10:25',
+        '10:30', '10:35', '10:40', '10:45', '10:50', '10:55',
+      ]
+    */
+    assert(_.isNumber(wrapper.instance().getActiveMinute()), 'return number');
+    assert.equal(wrapper.instance().getActiveMinute(), 11, 'return active minute position number');
+  });
+
+  it('return undefined when value is not provided', () => {
+    const wrapper = shallow(<MinutePicker
+      initializeWith={date} />);
+    assert(_.isUndefined(wrapper.instance().getActiveMinute()), 'return undefined');
+  });
+});
+
+describe('<MinutePicker />: isNextPageAvailable', () => {
+  const date = moment('2018-08-12');
+
+  describe('is not available by maxDate', () => {
+    it('return false', () => {
+      const wrapper = shallow(<MinutePicker
+        maxDate={moment('2018-08-12')}
+        initializeWith={date} />);
       
-//       assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-//       assert.equal(wrapper.instance().getDisabledHours().length, 2, 'return array of length 2');
-//       wrapper.instance().getDisabledHours().forEach((hour) => {
-//         assert(_.isNumber(hour), 'contains numbers');
-//       });
-//       assert(_.includes(wrapper.instance().getDisabledHours(), 12), 'contains correct hour positions');
-//       assert(_.includes(wrapper.instance().getDisabledHours(), 14), 'contains correct hour positions');
-//     });
-//   });
+      assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
+      assert.isFalse(wrapper.instance().isNextPageAvailable(), 'return false');
+    });
+  });
 
-//   describe('return disabled hour positions based on `maxDate` prop', () => {
-//     it('return disabled hour positions position numbers', () => {
-//       const wrapper = shallow(<HourPicker
-//         maxDate={moment('2018-08-12 15:00')}
-//         initializeWith={date} />);
-//       const shouldReturn = [
-//         16, 17, 18, 19, 20, 21, 22, 23,
-//       ]; //disabled hours position numbers
-//       assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-//       assert.equal(wrapper.instance().getDisabledHours().length, 8, 'return array of length 8');
-//       wrapper.instance().getDisabledHours().forEach((hourPos) => {
-//         assert(_.isNumber(hourPos), 'contains numbers');
-//       });
-//       const producedHourPositions = wrapper.instance().getDisabledHours();
-//       shouldReturn.forEach((expectedPosition) => {
-//         assert(_.includes(producedHourPositions, expectedPosition), 'contains correct posiotion numbers');
-//       });
-//     });
-//   });
-
-//   describe('return disabled hour positions based on `minDate` prop', () => {
-//     it('return disabled hour positions position numbers', () => {
-//       const wrapper = shallow(<HourPicker
-//         minDate={moment('2018-08-12 03:00')}
-//         initializeWith={date} />);
+  describe('available by maxDate', () => {
+    it('return true', () => {
+      const wrapper = shallow(<MinutePicker
+        maxDate={moment('2018-08-13')}
+        initializeWith={date} />);
       
-//       const shouldReturn = [
-//         0, 1, 2,
-//       ]; //disabled hours position numbers
-//       assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-//       assert.equal(wrapper.instance().getDisabledHours().length, 3, 'return array of length 3');
-//       wrapper.instance().getDisabledHours().forEach((hourPos) => {
-//         assert(_.isNumber(hourPos), 'contains numbers');
-//       });
-//       const producedHourPositions = wrapper.instance().getDisabledHours();
-//       shouldReturn.forEach((expectedHourPos) => {
-//         assert(_.includes(producedHourPositions, expectedHourPos), 'contains correct posiotion numbers');
-//       });
-//     });
-//   });
+      assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
+      assert.isTrue(wrapper.instance().isNextPageAvailable(), 'return true');
+    });
+  });
+});
 
-//   describe('return disabled hour positions based on `minDate`, `maxDate`, `disable` props', () => {
-//     it('return disabled hour positions position numbers', () => {
-//       const wrapper = shallow(<HourPicker
-//         minDate={moment('2018-08-12 03:00')}
-//         maxDate={moment('2018-08-12 19:00')}
-//         disable={[moment('2018-08-12 12:00'), moment('2018-08-12 14:00')]}
-//         initializeWith={date} />);
-//       const shouldReturn = [
-//         0, 1, 2,
-//         12, 14,
-//         20, 21, 22, 23,
-//       ]; //disabled hours position numbers
-//       assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-//       assert.equal(wrapper.instance().getDisabledHours().length, 9, 'return array of length 9');
-//       wrapper.instance().getDisabledHours().forEach((hourPos) => {
-//         assert(_.isNumber(hourPos), 'contains numbers');
-//       });
-//       const producedHourPositions = wrapper.instance().getDisabledHours();
-//       shouldReturn.forEach((expectedHourPos) => {
-//         assert(_.includes(producedHourPositions, expectedHourPos), 'contains correct posiotion numbers');
-//       });
-//     });
-//   });
+describe('<MinutePicker />: isPrevPageAvailable', () => {
+  const date = moment('2018-08-12');
 
-//   describe('return disabled hour positions when none of `minDate`, `maxDate`, `disable` props provided', () => {
-//     it('return disabled hour positions position numbers', () => {
-//       const wrapper = shallow(<HourPicker
-//         initializeWith={date} />);
+  describe('is not available by minDate', () => {
+    it('return false', () => {
+      const wrapper = shallow(<MinutePicker
+        minDate={moment('2018-08-12')}
+        initializeWith={date} />);
       
-//       assert(_.isUndefined(wrapper.instance().getDisabledHours()), 'return undefined');
-//     });
-//   });
-// });
+      assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
+      assert.isFalse(wrapper.instance().isPrevPageAvailable(), 'return false');
+    });
+  });
 
-// describe('<HourPicker />: isNextPageAvailable', () => {
-//   const date = moment('2018-08-12');
-
-//   describe('is not available by maxDate', () => {
-//     it('return false', () => {
-//       const wrapper = shallow(<HourPicker
-//         maxDate={moment('2018-08-12')}
-//         initializeWith={date} />);
+  describe('available by minDate', () => {
+    it('return true', () => {
+      const wrapper = shallow(<MinutePicker
+        minDate={moment('2018-07-11')}
+        initializeWith={date} />);
       
-//       assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
-//       assert.isFalse(wrapper.instance().isNextPageAvailable(), 'return false');
-//     });
-//   });
+      assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
+      assert.isTrue(wrapper.instance().isPrevPageAvailable(), 'return true');
+    });
+  });
+});
 
-//   describe('available by maxDate', () => {
-//     it('return true', () => {
-//       const wrapper = shallow(<HourPicker
-//         maxDate={moment('2018-08-13')}
-//         initializeWith={date} />);
-      
-//       assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
-//       assert.isTrue(wrapper.instance().isNextPageAvailable(), 'return true');
-//     });
-//   });
-// });
+describe('<MinutePicker />: getCurrentDate', () => {
+  const date = moment('2018-08-12');
 
-// describe('<HourPicker />: isPrevPageAvailable', () => {
-//   const date = moment('2018-08-12');
-
-//   describe('is not available by minDate', () => {
-//     it('return false', () => {
-//       const wrapper = shallow(<HourPicker
-//         minDate={moment('2018-08-12')}
-//         initializeWith={date} />);
-      
-//       assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
-//       assert.isFalse(wrapper.instance().isPrevPageAvailable(), 'return false');
-//     });
-//   });
-
-//   describe('available by minDate', () => {
-//     it('return true', () => {
-//       const wrapper = shallow(<HourPicker
-//         minDate={moment('2018-07-11')}
-//         initializeWith={date} />);
-      
-//       assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
-//       assert.isTrue(wrapper.instance().isPrevPageAvailable(), 'return true');
-//     });
-//   });
-// });
-
-// describe('<HourPicker />: getCurrentDate', () => {
-//   const date = moment('2018-08-12');
-
-//   it('return string in format `MMMM DD, YYYY`', () => {
-//     const wrapper = shallow(<HourPicker
-//       initializeWith={date} />);
+  it('return string in format `MMMM DD, YYYY`', () => {
+    const wrapper = shallow(<MinutePicker
+      initializeWith={date} />);
     
-//     assert(_.isString(wrapper.instance().getCurrentDate()), 'return string');
-//     assert.equal(wrapper.instance().getCurrentDate(), date.format('MMMM DD, YYYY'), 'return proper value');
-//   });
-// });
+    assert(_.isString(wrapper.instance().getCurrentDate()), 'return string');
+    assert.equal(wrapper.instance().getCurrentDate(), date.format('MMMM DD, YYYY'), 'return proper value');
+  });
+});
 
-// describe('<HourPicker />: handleChange', () => {
-//   const date = moment('2018-08-12');
+describe('<MinutePicker />: handleChange', () => {
+  const date = moment('2018-08-12 10:00');
 
-//   it('call onChangeFake with { year: number, month: number, date: number, hour: number }', () => {
-//     const onChangeFake = sinon.fake();
-//     const wrapper = shallow(<HourPicker
-//       onChange={onChangeFake}
-//       initializeWith={date} />);
-//     const possibleValues = wrapper.instance().buildHours();
-//     wrapper.instance().handleChange('click', { value: possibleValues[15]});
-//     const calledWithArgs = onChangeFake.args[0];
+  it('call onChangeFake with { year: number, month: number, date: number, hour: number }', () => {
+    const onChangeFake = sinon.fake();
+    const wrapper = shallow(<MinutePicker
+      onChange={onChangeFake}
+      initializeWith={date} />);
+    const possibleValues = wrapper.instance().buildMinutes();
+    /*
+      [
+        '**:00', '**:05', '**:10', '**:15', '**:20', '**:25',
+        '**:30', '**:35', '**:40', '**:45', '**:50', '**:55',
+      ]
+    */
+    wrapper.instance().handleChange('click', { value: possibleValues[8]});
+    const calledWithArgs = onChangeFake.args[0];
 
-//     assert(onChangeFake.calledOnce, 'onChangeFake called once');
-//     assert.equal(calledWithArgs[0], 'click', 'correct first argument');
-//     assert.equal(calledWithArgs[1].value.year, 2018, 'correct year');
-//     assert.equal(calledWithArgs[1].value.month, 7, 'correct month');
-//     assert.equal(calledWithArgs[1].value.date, 12, 'correct date');
-//     assert.equal(calledWithArgs[1].value.hour, 15, 'correct hour');
-//   });
-// });
+    assert(onChangeFake.calledOnce, 'onChangeFake called once');
+    assert.equal(calledWithArgs[0], 'click', 'correct first argument');
+    assert.equal(calledWithArgs[1].value.year, 2018, 'correct year');
+    assert.equal(calledWithArgs[1].value.month, 7, 'correct month');
+    assert.equal(calledWithArgs[1].value.date, 12, 'correct date');
+    assert.equal(calledWithArgs[1].value.hour, 10, 'correct hour');
+    assert.equal(calledWithArgs[1].value.minute, 40, 'correct hour');
+  });
+});
 
-// describe('<HourPicker />: switchToNextPage', () => {
-//   const date = moment('2018-08-12');
+describe('<MinutePicker />: switchToNextPage', () => {
+  const date = moment('2018-08-12');
 
-//   it('shift `date` state field one day forward', () => {
-//     const wrapper = shallow(<HourPicker
-//       initializeWith={date} />);
+  it('shift `date` state field one day forward', () => {
+    const wrapper = shallow(<MinutePicker
+      initializeWith={date} />);
     
-//     assert.equal(wrapper.state('date').date(), 12, 'date not changed yet');
-//     wrapper.instance().switchToNextPage();
-//     assert.equal(wrapper.state('date').date(), 12 + 1, 'date shifted one day forward');
-//   });
-// });
+    assert.equal(wrapper.state('date').date(), 12, 'date not changed yet');
+    wrapper.instance().switchToNextPage();
+    assert.equal(wrapper.state('date').date(), 12 + 1, 'date shifted one day forward');
+  });
+});
 
-// describe('<HourPicker />: switchToPrevPage', () => {
-//   const date = moment('2018-08-12');
+describe('<MinutePicker />: switchToPrevPage', () => {
+  const date = moment('2018-08-12');
 
-//   it('shift `date` state field one day backward', () => {
-//     const wrapper = shallow(<HourPicker
-//       initializeWith={date} />);
+  it('shift `date` state field one day backward', () => {
+    const wrapper = shallow(<MinutePicker
+      initializeWith={date} />);
     
-//     assert.equal(wrapper.state('date').date(), 12, 'date not changed yet');
-//     wrapper.instance().switchToPrevPage();
-//     assert.equal(wrapper.state('date').date(), 12 - 1, 'date shifted one day backward');
-//   });
-// });
+    assert.equal(wrapper.state('date').date(), 12, 'date not changed yet');
+    wrapper.instance().switchToPrevPage();
+    assert.equal(wrapper.state('date').date(), 12 - 1, 'date shifted one day backward');
+  });
+});

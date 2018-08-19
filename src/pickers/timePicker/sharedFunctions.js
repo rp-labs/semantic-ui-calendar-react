@@ -31,3 +31,21 @@ function convertHourTo_12_Format(hour/*string*/) {
   }
   return h;
 }
+
+export function isNextPageAvailable(date/*Moment*/, maxDate/*Moment*/) {
+  if (maxDate) {
+    return maxDate.isAfter(date, 'day');
+  }
+  return true;
+}
+
+export function isPrevPageAvailable(date/*Moment*/, minDate/*Moment*/) {
+  if (minDate) {
+    return minDate.isBefore(date, 'day');
+  }
+  return true;
+}
+
+export function getCurrentDate(date/*Moment*/) {
+  return date.format('MMMM DD, YYYY');
+}

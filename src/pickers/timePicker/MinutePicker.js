@@ -5,7 +5,14 @@ import _ from 'lodash';
 
 import MinuteView from '../../views/MinuteView';
 import { getUnhandledProps } from '../../lib';
-import { buildTimeStringWithSuffix } from './sharedFunctions';
+import {
+  buildTimeStringWithSuffix,
+  isNextPageAvailable,
+  isPrevPageAvailable,
+  getCurrentDate,
+} from './sharedFunctions';
+
+const MINUTES_STEP = 5;
 
 class MinutePicker extends React.Component {
   /*
@@ -23,44 +30,72 @@ class MinutePicker extends React.Component {
 
   buildMinutes() {
     const hour = this.state.date.hour() < 10? '0' + this.state.date.hour().toString() : this.state.date.hour().toString();
-    return _.range(0, 60, 5)
+    return _.range(0, 60, MINUTES_STEP)
       .map(minute => `${minute < 10? '0' : ''}${minute}`)
       .map(minute => buildTimeStringWithSuffix(hour, minute, this.props.timeFormat));
   }
 
   getActiveMinute() {
-    // produce active minute index
+    /* The only purpose of this method is to return a minute position
+    that should be displayed as active.
+    */
+    if (this.props.value) {
+      return Math.floor(this.props.value.minutes() / MINUTES_STEP);
+    }
   }
 
   isNextPageAvailable() {
-    // bool
+    return isNextPageAvailable(this.state.date, this.props.maxDate);
   }
 
   isPrevPageAvailable() {
-    // bool
+    return isPrevPageAvailable(this.state.date, this.props.minDate);
   }
 
   getCurrentDate() {
-    // produce string for MinuteView to display in header
+    return getCurrentDate(this.state.date);
   }
 
   handleChange = (e, { value }) => {
-    // call onChange with { year, month, day, hour, minute }
+    const data = {
+      year: this.state.date.year(),
+      month: this.state.date.month(),
+      date: this.state.date.date(),
+      hour: this.state.date.hour(),
+      minute: this.buildMinutes().indexOf(value) * MINUTES_STEP,
+    };
+    _.invoke(this.props, 'onChange', e, { ...this.props, value: data });
   }
 
   switchToNextPage = () => {
-    // shift date 1 day forward
+    this.setState(({ date }) => {
+      const nextDate = date.clone();
+      nextDate.add(1, 'day');
+      return { date: nextDate };
+    });
   }
 
   switchToPrevPage = () => {
-    //shift date 1 day backward
+    this.setState(({ date }) => {
+      const prevDate = date.clone();
+      prevDate.subtract(1, 'day');
+      return { date: prevDate };
+    });
   }
 
   render() {
     const rest = getUnhandledProps(MinutePicker, this.props);
     return (
       <MinuteView
-        { ...rest } />
+        { ...rest }
+        minutes={this.buildMinutes()}
+        onNextPageBtnClick={this.switchToNextPage}
+        onPrevPageBtnClick={this.switchToPrevPage}
+        onMinuteClick={this.handleChange}
+        hasNextPage={this.isNextPageAvailable()}
+        hasPrevPage={this.isPrevPageAvailable()}
+        currentDate={this.getCurrentDate()}
+        active={this.getActiveMinute()} />
     );
   }
 }

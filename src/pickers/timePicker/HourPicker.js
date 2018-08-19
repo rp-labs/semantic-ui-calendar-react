@@ -5,7 +5,12 @@ import _ from 'lodash';
 
 import HourView from '../../views/HourView';
 import { getUnhandledProps } from '../../lib';
-import { buildTimeStringWithSuffix } from './sharedFunctions';
+import {
+  buildTimeStringWithSuffix,
+  isNextPageAvailable,
+  isPrevPageAvailable,
+  getCurrentDate,
+} from './sharedFunctions';
 
 class HourPicker extends React.Component {
   /*
@@ -28,25 +33,20 @@ class HourPicker extends React.Component {
   }
 
   getActiveHour() {
+    /* The only purpose of this method is to return a hour position
+    that should be displayed as active.
+    */
     if (this.props.value) {
       return this.props.value.hour();
     }
   }
 
   isNextPageAvailable() {
-    const { maxDate } = this.props;
-    if (maxDate) {
-      return maxDate.isAfter(this.state.date, 'day');
-    }
-    return true;
+    return isNextPageAvailable(this.state.date, this.props.maxDate);
   }
 
   isPrevPageAvailable() {
-    const { minDate } = this.props;
-    if (minDate) {
-      return minDate.isBefore(this.state.date, 'day');
-    }
-    return true;
+    return isPrevPageAvailable(this.state.date, this.props.minDate);
   }
 
   getDisabledHours() {
@@ -91,7 +91,7 @@ class HourPicker extends React.Component {
   }
 
   getCurrentDate() {
-    return this.state.date.format('MMMM DD, YYYY');
+    return getCurrentDate(this.state.date);
   }
 
   handleChange = (e, { value }) => {
