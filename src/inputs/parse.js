@@ -32,12 +32,18 @@ export function parseArrayOrValue(data, dateFormat) {
 /** Create moment.
  * 
  * Creates moment using either of `value` and `initialDate` arguments (if provided).
- * Precedense order: value -> initialDate -> default value
+ * Precedense order: value -> params -> initialDate -> default value
  */
-export function getInitializer(value, initialDate, dateFormat) {
+export function getInitializer(value, initialDate, dateFormat, dateParams) {
   const parsedValue = parseValue(value, dateFormat);
   if (parsedValue) {
     return parsedValue;
+  }
+  if (dateParams) {
+    const parsedParams = moment(dateParams);
+    if (parsedParams.isValid()) {
+      return parsedParams;
+    }
   }
   const parsedInitialDate = parseValue(initialDate, dateFormat);
   if (parsedInitialDate) {

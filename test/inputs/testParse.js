@@ -20,6 +20,23 @@ describe('getInitializer', () => {
     });
   });
 
+  describe('`dateParams` param provided', () => {
+    it('return valid moment created from `dateParams`', () => {
+      const dateParams = {
+        year: 2018,
+        month: 4,
+        date: 15,
+        hour: 14,
+        minute: 12,
+      };
+      assert(moment.isMoment(getInitializer(undefined, undefined, dateFormat, dateParams)), 'return moment');
+      assert(getInitializer(undefined, undefined, dateFormat, dateParams).isValid(), 'return valid moment');
+      assert(
+        getInitializer(undefined, undefined, dateFormat, dateParams).isSame(moment(dateParams), 'minute'),
+        'return correct moment');
+    });
+  });
+
   describe('`initialDate` param provided', () => {
     it('return valid moment created from `initialDate`', () => {
       const initialDate = '2018-05-15 14:12';
@@ -27,6 +44,43 @@ describe('getInitializer', () => {
       assert(getInitializer(undefined, initialDate, dateFormat).isValid(), 'return valid moment');
       assert(
         getInitializer(undefined, initialDate, dateFormat).isSame(moment(initialDate, dateFormat), 'minute'),
+        'return correct moment');
+    });
+  });
+
+  describe('`value`, `initialDate`, and `dateParams` params provided', () => {
+    it('return valid moment created from `value`', () => {
+      const value = '2018-05-15 14:12';
+      const initialDate = '2020-05-15 15:00';
+      const dateParams = {
+        year: 2018,
+        month: 4,
+        date: 15,
+        hour: 14,
+        minute: 12,
+      };
+      assert(moment.isMoment(getInitializer(value, initialDate, dateFormat, dateParams)), 'return moment');
+      assert(getInitializer(value, initialDate, dateFormat, dateParams).isValid(), 'return valid moment');
+      assert(
+        getInitializer(value, initialDate, dateFormat, dateParams).isSame(moment(value, dateFormat), 'minute'),
+        'return correct moment');
+    });
+  });
+
+  describe('`initialDate` and `dateParams` params provided', () => {
+    it('return valid moment created from `value`', () => {
+      const initialDate = '2020-05-15 15:00';
+      const dateParams = {
+        year: 2018,
+        month: 4,
+        date: 15,
+        hour: 14,
+        minute: 12,
+      };
+      assert(moment.isMoment(getInitializer(undefined, initialDate, dateFormat, dateParams)), 'return moment');
+      assert(getInitializer(undefined, initialDate, dateFormat, dateParams).isValid(), 'return valid moment');
+      assert(
+        getInitializer(undefined, initialDate, dateFormat, dateParams).isSame(moment(dateParams), 'minute'),
         'return correct moment');
     });
   });

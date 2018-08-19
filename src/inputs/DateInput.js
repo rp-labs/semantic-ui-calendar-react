@@ -22,51 +22,98 @@ class DateInput extends React.Component {
         - mode: one of [ 'year', 'month', 'day' ]
         - year: number
         - month: number
-        - day: number
+        - date: number
     */
+    this.state = {
+      mode: props.startMode,
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    this.value = undefined;
+    if (prevProps.value !== this.props.value) {
+      this.value = this.props.value;
+    }
+  }
+
+  getInputValue() {
+    // only if previous this.props.value is not the same as current this.props.value
+    // this.value is not undefined
+    return this.value;
+  }
+
+  getDateParams() {
+    const {
+      year,
+      month,
+      date,
+    } = this.state;
+    if (!_.isNil(year) || !_.isNil(month) || !_.isNil(date)) {
+      return { year, month, date };
+    }
   }
 
   getPicker() {
-    return <div></div>;
+    const {
+      value,
+      initialDate,
+      dateFormat,
+      disable,
+      minDate,
+      maxDate,
+    } = this.props;
+    const pickerProps = {
+      onChange: this.handleSelect,
+      initializeWith: getInitializer(this.getInputValue(), initialDate, dateFormat, this.getDateParams()),
+      value: parseInput(value, dateFormat),
+      disable: parseArrayOrValue(disable),
+      minDate: parseArrayOrValue(minDate),
+      maxDate: parseArrayOrValue(maxDate),
+    };
+    const { mode } = this.state;
+    if (mode === 'year') {
+      return <YearPicker key={ value } { ...pickerProps } />;
+    }
+    if (mode === 'month') {
+      return <MonthPicker key={ value } { ...pickerProps } />;
+    }
+    return <DayPicker key={ value } { ...pickerProps } />;
   }
 
   switchToNextMode() {
-    // change mode state firld to next one
+    this.setState(({ mode }) => {
+      if (mode === 'year') return { mode: 'month' };
+      if (mode === 'month') return { mode: 'day' };
+      return { mode: 'year' };
+    });
   }
 
   switchToPrevMode() {
-    // change mode state firld to previous one
+    this.setState(({ mode }) => {
+      if (mode === 'day') return { mode: 'month' };
+      if (mode === 'month') return { mode: 'year' };
+      return { mode: 'day' };
+    });
   }
 
   handleSelect = (e, { value }) => {
-    /*
-      1) Set new state
-
-      2) Check if ready to produce value (ready if mode is `day`)
-
-        yes) parse { year, month, day: value }, invoke onChange with string
-        no) do nothing
-    */
-
-    // const date = moment({ year: value.year });
-    // let output = '';
-    // if (date.isValid()) {
-    //   output = date.format(this.props.dateFormat);
-    // }
-    // _.invoke(
-    //   this.props,
-    //   'onChange',
-    //   e, { ...this.props, value: output });
+    this.setState(( prevState ) => {
+      const {
+        mode,
+      } = prevState;
+      if (mode !== 'day') {
+        this.switchToNextMode(); 
+      } else {
+        const outValue = moment(value, this.props.dateFormat);
+        _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
+      }
+      return value;
+    });
   }
 
   render() {
     const {
       value,
-      disable,
-      maxDate,
-      minDate,
-      initialDate,
-      dateFormat,
     } = this.props;
     const rest = getUnhandledProps(DateInput, this.props);
     return (
@@ -112,10 +159,15 @@ DateInput.propTypes = {
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** Display mode to start. */
+  startMode: PropTypes.oneOf([
+    'year', 'month', 'day',
+  ]),
 };
 
 DateInput.defaultProps = {
   dateFormat: 'YYYY',
+  startMode: 'day',
 };
 
 export default DateInput;

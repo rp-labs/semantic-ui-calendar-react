@@ -13,6 +13,19 @@ import {
 import { getUnhandledProps } from '../lib';
 
 class MonthInput extends React.Component {
+  componentDidUpdate(prevProps) {
+    this.value = undefined;
+    if (prevProps.value !== this.props.value) {
+      this.value = this.props.value;
+    }
+  }
+
+  getInputValue() {
+    // only if previous this.props.value is not the same as current this.props.value
+    // this.value is not undefined
+    return this.value;
+  }
+
   handleSelect = (e, { value }) => {
     const date = moment({ month: value.month });
     let output = '';
@@ -42,7 +55,7 @@ class MonthInput extends React.Component {
         value={value}>
         <MonthPicker
           onChange={this.handleSelect}
-          initializeWith={getInitializer(value, initialDate, dateFormat)}
+          initializeWith={getInitializer(this.getInputValue(), initialDate, dateFormat)}
           value={parseInput(value, dateFormat)}
           disable={parseArrayOrValue(disable, dateFormat)}
           maxDate={parseArrayOrValue(maxDate, dateFormat)}
