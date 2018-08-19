@@ -45,3 +45,9 @@ export function getInitializer(value, initialDate, dateFormat) {
   }
   return moment();
 }
+
+export function parseInput(value, dateFormat) {
+  if (_.isString(value)) {
+    return parseValue(value, dateFormat);
+  }
+}

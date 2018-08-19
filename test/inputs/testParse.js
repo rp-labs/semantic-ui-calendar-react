@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import {
   getInitializer,
+  parseInput,
 } from '../../src/inputs/parse';
 
 describe('getInitializer', () => {
@@ -46,6 +47,27 @@ describe('getInitializer', () => {
     it('return valid default moment', () => {
       assert(moment.isMoment(getInitializer(undefined, undefined, dateFormat)), 'return moment');
       assert(getInitializer(undefined, undefined, dateFormat).isValid(), 'return valid moment');
+    });
+  });
+});
+
+describe('parseInput', () => {
+  describe('`value` param provided', () => {
+    it('create moment from input string', () => {
+      const value = 'Sep';
+      const dateFormat = 'MMM';
+  
+      assert(moment.isMoment(parseInput(value, dateFormat)), 'return moment instance');
+      assert(parseInput(value, dateFormat).isValid(), 'return valid moment instance');
+      assert(parseInput(value, dateFormat).isSame(moment('Sep', 'MMM'), 'year'), 'return correct moment');
+    });
+  });
+
+  describe('`value` param is not provided', () => {
+    it('return undefined', () => {
+      const dateFormat = 'MMM';
+  
+      assert(_.isUndefined(parseInput(undefined, dateFormat)), 'return undefined');
     });
   });
 });

@@ -6,20 +6,13 @@ import _ from 'lodash';
 import InputView from '../views/InputView';
 import YearPicker from '../pickers/YearPicker';
 import {
-  parseValue,
+  parseInput,
   parseArrayOrValue,
   getInitializer,
 } from './parse';
 import { getUnhandledProps } from '../lib';
 
 class YearInput extends React.Component {
-  parseInput() {
-    const { value } = this.props;
-    if (_.isString(value)) {
-      return parseValue(value, this.props.dateFormat);
-    }
-  }
-
   handleSelect = (e, { value }) => {
     const date = moment({ year: value.year });
     let output = '';
@@ -50,7 +43,7 @@ class YearInput extends React.Component {
         <YearPicker
           onChange={this.handleSelect}
           initializeWith={getInitializer(value, initialDate, dateFormat)}
-          value={this.parseInput()}
+          value={parseInput(value, dateFormat)}
           disable={parseArrayOrValue(disable, dateFormat)}
           maxDate={parseArrayOrValue(maxDate, dateFormat)}
           minDate={parseArrayOrValue(minDate, dateFormat)} />
