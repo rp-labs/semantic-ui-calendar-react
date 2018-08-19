@@ -19,7 +19,7 @@ export function parseValue(value, dateFormat) {
  * Return array of moments or moment. Returned value contains only valid moments.
  * Return undefined if none of the input values are valid.
  */
-export function parseDirty(data, dateFormat) {
+export function parseArrayOrValue(data, dateFormat) {
   if (_.isArray(data)) {
     const parsed = _.compact(data.map(item => parseValue(item, dateFormat)));
     if (parsed.length > 0) {

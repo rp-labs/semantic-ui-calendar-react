@@ -26,7 +26,7 @@ describe('<DatesRangePicker />', () => {
       'initialize `date` state field with moment provided in `initializeWith` prop');
   });
 
-  it('render <DayPicker /> properly', () => {
+  it('render <DatesRangePicker /> properly', () => {
     const date = moment('2015-05-01');
     const wrapper = shallow(<DatesRangePicker
       initializeWith={date} />);

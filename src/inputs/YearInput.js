@@ -7,12 +7,14 @@ import InputView from '../views/InputView';
 import YearPicker from '../pickers/YearPicker';
 import {
   parseValue,
-  parseDirty,
+  parseArrayOrValue,
   getInitializer,
 } from './parse';
+import { getUnhandledProps } from '../lib';
 
 class YearInput extends React.Component {
-  parseString(value) {
+  parseInput() {
+    const { value } = this.props;
     if (_.isString(value)) {
       return parseValue(value, this.props.dateFormat);
     }
@@ -39,29 +41,36 @@ class YearInput extends React.Component {
       initialDate,
       dateFormat,
     } = this.props;
+    const rest = getUnhandledProps(YearInput, this.props);
     return (
       <InputView
+        icon="calendar"
+        { ...rest }
         value={value}>
         <YearPicker
           onChange={this.handleSelect}
           initializeWith={getInitializer(value, initialDate, dateFormat)}
-          value={this.parseString(value)}
-          disable={parseDirty(disable, dateFormat)}
-          maxDate={parseDirty(maxDate, dateFormat)}
-          minDate={parseDirty(minDate, dateFormat)} />
+          value={this.parseInput()}
+          disable={parseArrayOrValue(disable, dateFormat)}
+          maxDate={parseArrayOrValue(maxDate, dateFormat)}
+          minDate={parseArrayOrValue(minDate, dateFormat)} />
       </InputView>
     );
   }
 }
 
 YearInput.propTypes = {
+  /** Currently selected value. */
   value: PropTypes.string,
+  /** Moment date formatting string. */
   dateFormat: PropTypes.string,
+  /** Date to display initially when no date is selected. */
   initialDate: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** Date or list of dates that are displayed as disabled. */
   disable: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
@@ -70,11 +79,13 @@ YearInput.propTypes = {
     PropTypes.instanceOf(Date),
     PropTypes.arrayOf(PropTypes.instanceOf(Date)),
   ]),
+  /** Maximum date that can be selected. */
   maxDate: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** Minimum date that can be selected. */
   minDate: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.instanceOf(moment),

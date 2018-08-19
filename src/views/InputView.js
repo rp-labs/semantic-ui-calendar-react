@@ -41,12 +41,24 @@ function InputView(props) {
 }
 
 InputView.propTypes = {
+  /** Whether to display inline picker or picker inside a popup. */
   inline: PropTypes.bool,
+  /** Where to display popup. */
   popupPosition: PropTypes.string,
+  /** Currently selected value. */
   value: PropTypes.string,
+  /** Wheter to close a popup when cursor leaves it. */
   closeOnMouseLeave: PropTypes.bool,
+  /** Called after input field value has changed. */
   onChange: PropTypes.bool,
+  /** Picker. */
   children: PropTypes.node,
+};
+
+InputView.defaultProps = {
+  inline: false,
+  closable: false,
+  closeOnMouseLeave: true
 };
 
 export default InputView;
