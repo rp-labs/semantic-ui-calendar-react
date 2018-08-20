@@ -20,6 +20,17 @@ describe('getInitializer', () => {
     });
   });
 
+  describe('`value` year', () => {
+    it('return valid moment created from `value`', () => {
+      const value = '2018';
+      assert(moment.isMoment(getInitializer(value, undefined, 'YYYY')), 'return moment');
+      assert(getInitializer(value, undefined, 'YYYY').isValid(), 'return valid moment');
+      assert.equal(
+        getInitializer(value, undefined, 'YYYY').year(), 2018,
+        'return correct moment');
+    });
+  });
+
   describe('`dateParams` param provided', () => {
     it('return valid moment created from `dateParams`', () => {
       const dateParams = {

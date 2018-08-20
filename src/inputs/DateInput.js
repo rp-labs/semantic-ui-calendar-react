@@ -13,6 +13,7 @@ import {
   getInitializer,
 } from './parse';
 import { getUnhandledProps } from '../lib';
+import InputMixin from './InputMixin';
 
 function getNextMode(currentMode) {
   if (currentMode === 'year') return 'month';
@@ -26,7 +27,7 @@ function getPrevMode(currentMode) {
   return 'day';
 }
 
-class DateInput extends React.Component {
+class DateInput extends InputMixin {
   constructor(props) {
     super(props);
     /*
@@ -41,20 +42,11 @@ class DateInput extends React.Component {
     };
   }
 
-  componentDidUpdate(prevProps) {
-    this.value = undefined;
-    if (prevProps.value !== this.props.value) {
-      this.value = this.props.value;
-    }
-  }
-
-  getInputValue() {
-    // only if previous this.props.value is not the same as current this.props.value
-    // this.value is not undefined
-    return this.value;
-  }
-
   getDateParams() {
+    /* 
+      return undefined if none of [ 'year', 'month', 'date' ]
+      state fields defined
+    */
     const {
       year,
       month,
@@ -76,6 +68,7 @@ class DateInput extends React.Component {
     } = this.props;
     const pickerProps = {
       onChange: this.handleSelect,
+      onHeaderClick: this.switchToPrevMode,
       initializeWith: getInitializer(this.getInputValue(), initialDate, dateFormat, this.getDateParams()),
       value: parseInput(value, dateFormat),
       disable: parseArrayOrValue(disable),
@@ -92,13 +85,13 @@ class DateInput extends React.Component {
     return <DayPicker key={ value } { ...pickerProps } />;
   }
 
-  switchToNextMode() {
+  switchToNextMode = () => {
     this.setState(({ mode }) => {
       return { mode: getNextMode(mode) };
     });
   }
 
-  switchToPrevMode() {
+  switchToPrevMode = () => {
     this.setState(({ mode }) => {
       return { mode: getPrevMode(mode) };
     });
@@ -175,7 +168,7 @@ DateInput.propTypes = {
 };
 
 DateInput.defaultProps = {
-  dateFormat: 'YYYY',
+  dateFormat: 'YYYY-MM-DD',
   startMode: 'day',
 };
 
