@@ -14,6 +14,18 @@ import {
 } from './parse';
 import { getUnhandledProps } from '../lib';
 
+function getNextMode(currentMode) {
+  if (currentMode === 'year') return 'month';
+  if (currentMode === 'monh') return 'day';
+  return 'year';
+}
+
+function getPrevMode(currentMode) {
+  if (currentMode === 'day') return 'month';
+  if (currentMode === 'monh') return 'year';
+  return 'day';
+}
+
 class DateInput extends React.Component {
   constructor(props) {
     super(props);
@@ -82,17 +94,13 @@ class DateInput extends React.Component {
 
   switchToNextMode() {
     this.setState(({ mode }) => {
-      if (mode === 'year') return { mode: 'month' };
-      if (mode === 'month') return { mode: 'day' };
-      return { mode: 'year' };
+      return { mode: getNextMode(mode) };
     });
   }
 
   switchToPrevMode() {
     this.setState(({ mode }) => {
-      if (mode === 'day') return { mode: 'month' };
-      if (mode === 'month') return { mode: 'year' };
-      return { mode: 'day' };
+      return { mode: getPrevMode(mode) };
     });
   }
 
@@ -101,13 +109,14 @@ class DateInput extends React.Component {
       const {
         mode,
       } = prevState;
+      let nextMode = mode;
       if (mode !== 'day') {
-        this.switchToNextMode(); 
+        nextMode = getNextMode(mode);
       } else {
-        const outValue = moment(value, this.props.dateFormat);
+        const outValue = moment(value).format(this.props.dateFormat);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
-      return value;
+      return { mode: nextMode, ...value };
     });
   }
 
