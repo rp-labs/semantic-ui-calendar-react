@@ -8,7 +8,6 @@ import { WEEKS_TO_DISPLAY } from '../../views/DayView';
 import { getUnhandledProps } from '../../lib';
 import {
   buildDays,
-  getDefaultEnabledDayPositions,
   getDisabledDays,
   isNextPageAvailable,
   isPrevPageAvailable,
@@ -31,12 +30,20 @@ class DayPicker extends React.Component {
   }
 
   buildDays() {
+    /*
+      Return array of dates (strings) like ['31', '1', ...]
+      that used to populate calendar's page.
+    */
     return buildDays(this.state.date, DAYS_ON_PAGE);
   }
 
-  getActiveDay() {
+  getActiveDayPosition() {
+    /*
+      Return position of a date that should be displayed as active
+      (position in array returned by `this.buildDays`).
+    */
     if (this.props.value && this.props.value.isSame(this.state.date, 'month')) {
-      const disabledPositions = this.getDisabledDays();
+      const disabledPositions = this.getDisabledDaysPositions();
       const active = this.buildDays()
         .map((day, i) => _.includes(disabledPositions, i)? undefined : day)
         .indexOf(this.props.value.date().toString());
@@ -46,7 +53,11 @@ class DayPicker extends React.Component {
     }
   }
 
-  getDisabledDays() {
+  getDisabledDaysPositions() {
+    /*
+      Return position numbers of dates that should be displayed as disabled
+      (position in array returned by `this.buildDays`).
+    */
     const {
       disable,
       maxDate,
@@ -57,28 +68,25 @@ class DayPicker extends React.Component {
 
   isNextPageAvailable() {
     const {
-      disable,
       maxDate,
     } = this.props;
-    return isNextPageAvailable(this.state.date, disable, maxDate);
+    return isNextPageAvailable(this.state.date, maxDate);
   }
 
   isPrevPageAvailable() {
     const {
-      disable,
       minDate,
     } = this.props;
-    return isPrevPageAvailable(this.state.date, disable, minDate);
+    return isPrevPageAvailable(this.state.date, minDate);
   }
 
-  getCurrentMonth() {
+  getCurrentDate() {
+    /* Return currently selected year and month(string) to display in calendar header. */
     return this.state.date.format('MMMM YYYY');
   }
 
-  handleChange = (e, { key, value }) => {
-    // value is just a string like '1' or '31'
-    // key represents clicked day position in array provided to DayView
-
+  handleChange = (e, { value }) => {
+    // `value` is selected date(string) like '31' or '1'
     const result = { 
       year: this.state.date.year(),
       month: this.state.date.month(),
@@ -115,9 +123,9 @@ class DayPicker extends React.Component {
         onNextPageBtnClick={this.switchToNextPage}
         onPrevPageBtnClick={this.switchToPrevPage}
         onDayClick={this.handleChange}
-        currentDate={this.getCurrentMonth()}
-        disabled={this.getDisabledDays()}
-        active={this.getActiveDay()} />
+        currentDate={this.getCurrentDate()}
+        disabled={this.getDisabledDaysPositions()}
+        active={this.getActiveDayPosition()} />
     );
   }
 }

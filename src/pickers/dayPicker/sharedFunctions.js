@@ -79,69 +79,21 @@ export function getDisabledDays(disable, maxDate, minDate, date, daysOnPage) {
   return _.sortBy(_.uniq(disabledDays).filter((day) => !_.isNil(day)));
 }
 
-export function isNextPageAvailable(date, disable, maxDate) {
-  return !_.some([
-    isNextPageUnavailable.byDisable(date, disable),
-    isNextPageUnavailable.byMaxDate(date, maxDate),
-  ]);
+export function isNextPageAvailable(date, maxDate) {
+  if (_.isNil(maxDate)) return true;
+  const lastDayInMonth = date.clone();
+  lastDayInMonth.endOf('month');
+  if (lastDayInMonth.isSameOrAfter(maxDate, 'date')) return false;
+  return true;
 }
 
-export function isPrevPageAvailable(date, disable, minDate) {
-  return !_.some([
-    isPrevPageUnavailable.byDisable(date, disable),
-    isPrevPageUnavailable.byMinDate(date, minDate),
-  ]);
+export function isPrevPageAvailable(date, minDate) {
+  if (_.isNil(minDate)) return true;
+  const firstDayInMonth = date.clone();
+  firstDayInMonth.startOf('month');
+  if (firstDayInMonth.isSameOrBefore(minDate, 'date')) return false;
+  return true;
 }
-
-// helpers
-export const isNextPageUnavailable = {
-  byDisable: (currentDate/*Moment*/, disabled/*Moment[]|undefined*/) => {
-    if (_.isNil(disabled)) return false;
-    const twoMonthsLater = currentDate.clone();
-    twoMonthsLater.add(2, 'month');
-    const nextMonth = currentDate.clone();
-    nextMonth.add(1, 'month');
-    const allDaysFromNextMonthDisabled = _.uniq(disabled
-      .filter(date => date.isBetween(currentDate, twoMonthsLater, 'month'))
-      .map(date => date.date())).length === nextMonth.daysInMonth();
-    if (allDaysFromNextMonthDisabled) {
-      return true;
-    }
-    return false;
-  },
-  byMaxDate: (currentDate/*Moment*/, maxDate/*Moment|undefined*/) => {
-    if (_.isNil(maxDate)) return false;
-    const lastDayInMonth = currentDate.clone();
-    lastDayInMonth.endOf('month');
-    if (lastDayInMonth.isSameOrAfter(maxDate)) return true;
-    return false;
-  }
-};
-
-// helpers
-export const isPrevPageUnavailable = {
-  byDisable: (currentDate/*Moment*/, disabled/*Moment[]|undefined*/) => {
-    if (_.isNil(disabled)) return false;
-    const twoMonthsEarlier = currentDate.clone();
-    twoMonthsEarlier.subtract(2, 'month');
-    const prevMonth = currentDate.clone();
-    prevMonth.subtract(1, 'month');
-    const allDaysFromPrevMonthDisabled = _.uniq(disabled
-      .filter(date => date.isBetween(twoMonthsEarlier, currentDate, 'month'))
-      .map(date => date.date())).length === prevMonth.daysInMonth();
-    if (allDaysFromPrevMonthDisabled) {
-      return true;
-    }
-    return false;
-  },
-  byMinDate: (currentDate/*Moment*/, minDate/*Moment|undefined*/) => {
-    if (_.isNil(minDate)) return false;
-    const firstDayInMonth = currentDate.clone();
-    firstDayInMonth.startOf('month');
-    if (firstDayInMonth.isSameOrBefore(minDate)) return true;
-    return false;
-  }
-};
 
 // helper
 export function getDaysArray(start/*number*/, brakepoints/*number[]*/, length) {

@@ -119,7 +119,7 @@ describe('<HourPicker />: buildHours', () => {
   
 });
 
-describe('<HourPicker />: getActiveHour', () => {
+describe('<HourPicker />: getActiveHourPosition', () => {
   const date = moment('2018-08-12');
 
   it('return active hour', () => {
@@ -134,12 +134,12 @@ describe('<HourPicker />: getActiveHour', () => {
         '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
       ]
     */
-    assert(_.isNumber(wrapper.instance().getActiveHour()), 'return number');
-    assert.equal(wrapper.instance().getActiveHour(), 15, 'return active hour position number');
+    assert(_.isNumber(wrapper.instance().getActiveHourPosition()), 'return number');
+    assert.equal(wrapper.instance().getActiveHourPosition(), 15, 'return active hour position number');
   });
 });
 
-describe('<HourPicker />: getDisabledHours', () => {
+describe('<HourPicker />: getDisabledHoursPositions', () => {
   const date = moment('2018-08-12');
 
   describe('return disabled hour positions based on `disable` prop', () => {
@@ -148,13 +148,13 @@ describe('<HourPicker />: getDisabledHours', () => {
         disable={[moment('2018-08-12 12:00'), moment('2018-08-12 14:00')]}
         initializeWith={date} />);
       
-      assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledHours().length, 2, 'return array of length 2');
-      wrapper.instance().getDisabledHours().forEach((hour) => {
+      assert(_.isArray(wrapper.instance().getDisabledHoursPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledHoursPositions().length, 2, 'return array of length 2');
+      wrapper.instance().getDisabledHoursPositions().forEach((hour) => {
         assert(_.isNumber(hour), 'contains numbers');
       });
-      assert(_.includes(wrapper.instance().getDisabledHours(), 12), 'contains correct hour positions');
-      assert(_.includes(wrapper.instance().getDisabledHours(), 14), 'contains correct hour positions');
+      assert(_.includes(wrapper.instance().getDisabledHoursPositions(), 12), 'contains correct hour positions');
+      assert(_.includes(wrapper.instance().getDisabledHoursPositions(), 14), 'contains correct hour positions');
     });
   });
 
@@ -166,12 +166,12 @@ describe('<HourPicker />: getDisabledHours', () => {
       const shouldReturn = [
         16, 17, 18, 19, 20, 21, 22, 23,
       ]; //disabled hours position numbers
-      assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledHours().length, 8, 'return array of length 8');
-      wrapper.instance().getDisabledHours().forEach((hourPos) => {
+      assert(_.isArray(wrapper.instance().getDisabledHoursPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledHoursPositions().length, 8, 'return array of length 8');
+      wrapper.instance().getDisabledHoursPositions().forEach((hourPos) => {
         assert(_.isNumber(hourPos), 'contains numbers');
       });
-      const producedHourPositions = wrapper.instance().getDisabledHours();
+      const producedHourPositions = wrapper.instance().getDisabledHoursPositions();
       shouldReturn.forEach((expectedPosition) => {
         assert(_.includes(producedHourPositions, expectedPosition), 'contains correct posiotion numbers');
       });
@@ -187,12 +187,12 @@ describe('<HourPicker />: getDisabledHours', () => {
       const shouldReturn = [
         0, 1, 2,
       ]; //disabled hours position numbers
-      assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledHours().length, 3, 'return array of length 3');
-      wrapper.instance().getDisabledHours().forEach((hourPos) => {
+      assert(_.isArray(wrapper.instance().getDisabledHoursPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledHoursPositions().length, 3, 'return array of length 3');
+      wrapper.instance().getDisabledHoursPositions().forEach((hourPos) => {
         assert(_.isNumber(hourPos), 'contains numbers');
       });
-      const producedHourPositions = wrapper.instance().getDisabledHours();
+      const producedHourPositions = wrapper.instance().getDisabledHoursPositions();
       shouldReturn.forEach((expectedHourPos) => {
         assert(_.includes(producedHourPositions, expectedHourPos), 'contains correct posiotion numbers');
       });
@@ -211,12 +211,12 @@ describe('<HourPicker />: getDisabledHours', () => {
         12, 14,
         20, 21, 22, 23,
       ]; //disabled hours position numbers
-      assert(_.isArray(wrapper.instance().getDisabledHours()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledHours().length, 9, 'return array of length 9');
-      wrapper.instance().getDisabledHours().forEach((hourPos) => {
+      assert(_.isArray(wrapper.instance().getDisabledHoursPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledHoursPositions().length, 9, 'return array of length 9');
+      wrapper.instance().getDisabledHoursPositions().forEach((hourPos) => {
         assert(_.isNumber(hourPos), 'contains numbers');
       });
-      const producedHourPositions = wrapper.instance().getDisabledHours();
+      const producedHourPositions = wrapper.instance().getDisabledHoursPositions();
       shouldReturn.forEach((expectedHourPos) => {
         assert(_.includes(producedHourPositions, expectedHourPos), 'contains correct posiotion numbers');
       });
@@ -228,7 +228,7 @@ describe('<HourPicker />: getDisabledHours', () => {
       const wrapper = shallow(<HourPicker
         initializeWith={date} />);
       
-      assert(_.isUndefined(wrapper.instance().getDisabledHours()), 'return undefined');
+      assert(_.isUndefined(wrapper.instance().getDisabledHoursPositions()), 'return undefined');
     });
   });
 });

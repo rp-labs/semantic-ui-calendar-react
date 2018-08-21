@@ -29,15 +29,20 @@ class MinutePicker extends React.Component {
   }
 
   buildMinutes() {
+    /*
+      Return array of minutes (strings) like ['16:15', '16:20', ...]
+      that used to populate calendar's page.
+    */
     const hour = this.state.date.hour() < 10? '0' + this.state.date.hour().toString() : this.state.date.hour().toString();
     return _.range(0, 60, MINUTES_STEP)
       .map(minute => `${minute < 10? '0' : ''}${minute}`)
       .map(minute => buildTimeStringWithSuffix(hour, minute, this.props.timeFormat));
   }
 
-  getActiveMinute() {
-    /* The only purpose of this method is to return a minute position
-    that should be displayed as active.
+  getActiveMinutePosition() {
+    /*
+      Return position of a minute that should be displayed as active
+      (position in array returned by `this.buildMinutes`).
     */
     if (this.props.value) {
       return Math.floor(this.props.value.minutes() / MINUTES_STEP);
@@ -53,6 +58,7 @@ class MinutePicker extends React.Component {
   }
 
   getCurrentDate() {
+    /* Return currently selected month, date and year(string) to display in calendar header. */
     return getCurrentDate(this.state.date);
   }
 
@@ -95,7 +101,7 @@ class MinutePicker extends React.Component {
         hasNextPage={this.isNextPageAvailable()}
         hasPrevPage={this.isPrevPageAvailable()}
         currentDate={this.getCurrentDate()}
-        active={this.getActiveMinute()} />
+        active={this.getActiveMinutePosition()} />
     );
   }
 }

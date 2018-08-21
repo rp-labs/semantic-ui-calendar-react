@@ -81,7 +81,7 @@ describe('<DatesRangePicker />: buildDays', () => {
   });
 });
 
-describe('<DatesRangePicker />: getActiveDays', () => {
+describe('<DatesRangePicker />: getActiveDaysPositions', () => {
   const date = moment('2018-08-12');
 
   it('return empty range when `start` and `end` props are undefined', () => {
@@ -97,9 +97,9 @@ describe('<DatesRangePicker />: getActiveDays', () => {
       '2', '3', '4', '5', '6', '7', '8',
     ]
     */
-    assert(_.isObject(wrapper.instance().getActiveDays()), 'return object');
-    assert(_.isUndefined(wrapper.instance().getActiveDays().start), 'return { start: undefined, ... }');
-    assert(_.isUndefined(wrapper.instance().getActiveDays().end), 'return { end: undefined, ... }');
+    assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+    assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().start), 'return { start: undefined, ... }');
+    assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
   });
 
   it('return half-filled range when `start` prop has value and `end` prop is undefined', () => {
@@ -116,9 +116,9 @@ describe('<DatesRangePicker />: getActiveDays', () => {
       '2', '3', '4', '5', '6', '7', '8',
     ]
     */
-    assert(_.isObject(wrapper.instance().getActiveDays()), 'return object');
-    assert.equal(wrapper.instance().getActiveDays().start, 8, 'return { start: 8, ... }');
-    assert(_.isUndefined(wrapper.instance().getActiveDays().end), 'return { end: undefined, ... }');
+    assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+    assert.equal(wrapper.instance().getActiveDaysPositions().start, 8, 'return { start: 8, ... }');
+    assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
   });
 
   it('return full range when `start` prop has value and `end` prop has value', () => {
@@ -136,13 +136,13 @@ describe('<DatesRangePicker />: getActiveDays', () => {
       '2', '3', '4', '5', '6', '7', '8',
     ]
     */
-    assert(_.isObject(wrapper.instance().getActiveDays()), 'return object');
-    assert.equal(wrapper.instance().getActiveDays().start, 8, 'return { start: 8, ... }');
-    assert.equal(wrapper.instance().getActiveDays().end, 14, 'return { end: 14, ... }');
+    assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+    assert.equal(wrapper.instance().getActiveDaysPositions().start, 8, 'return { start: 8, ... }');
+    assert.equal(wrapper.instance().getActiveDaysPositions().end, 14, 'return { end: 14, ... }');
   });
 });
 
-describe('<DatesRangePicker />: getDisabledDays', () => {
+describe('<DatesRangePicker />: getDisabledDaysPositions', () => {
   const date = moment('2018-08-12');
 
   describe('return disabled days based on `maxDate` prop', () => {
@@ -165,12 +165,12 @@ describe('<DatesRangePicker />: getDisabledDays', () => {
         25, 26, 27, 28, 29, 30, 31, 32, 33,
         34, 35, 36, 37, 38, 39, 40, 41,
       ]; //disabled days position numbers
-      assert(_.isArray(wrapper.instance().getDisabledDays()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledDays().length, 20, 'return array of length 20');
-      wrapper.instance().getDisabledDays().forEach((day) => {
+      assert(_.isArray(wrapper.instance().getDisabledDaysPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledDaysPositions().length, 20, 'return array of length 20');
+      wrapper.instance().getDisabledDaysPositions().forEach((day) => {
         assert(_.isNumber(day), 'contains numbers');
       });
-      const producedDays = wrapper.instance().getDisabledDays();
+      const producedDays = wrapper.instance().getDisabledDaysPositions();
       shouldReturn.forEach((expectedDay) => {
         assert(_.includes(producedDays, expectedDay), 'contains correct posiotion numbers');
       });
@@ -197,12 +197,12 @@ describe('<DatesRangePicker />: getDisabledDays', () => {
         3, 4, 5,
         34, 35, 36, 37, 38, 39, 40, 41,
       ]; //disabled days position numbers
-      assert(_.isArray(wrapper.instance().getDisabledDays()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledDays().length, 14, 'return array of length 14');
-      wrapper.instance().getDisabledDays().forEach((day) => {
+      assert(_.isArray(wrapper.instance().getDisabledDaysPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledDaysPositions().length, 14, 'return array of length 14');
+      wrapper.instance().getDisabledDaysPositions().forEach((day) => {
         assert(_.isNumber(day), 'contains numbers');
       });
-      const producedDays = wrapper.instance().getDisabledDays();
+      const producedDays = wrapper.instance().getDisabledDaysPositions();
       shouldReturn.forEach((expectedDay) => {
         assert(_.includes(producedDays, expectedDay), 'contains correct posiotion numbers');
       });
@@ -229,12 +229,12 @@ describe('<DatesRangePicker />: getDisabledDays', () => {
         0, 1, 2, 3, 4, 5,
         32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
       ]; //disabled days position numbers
-      assert(_.isArray(wrapper.instance().getDisabledDays()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledDays().length, 16, 'return array of length 16');
-      wrapper.instance().getDisabledDays().forEach((day) => {
+      assert(_.isArray(wrapper.instance().getDisabledDaysPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledDaysPositions().length, 16, 'return array of length 16');
+      wrapper.instance().getDisabledDaysPositions().forEach((day) => {
         assert(_.isNumber(day), 'contains numbers');
       });
-      const producedDays = wrapper.instance().getDisabledDays();
+      const producedDays = wrapper.instance().getDisabledDaysPositions();
       shouldReturn.forEach((expectedDay) => {
         assert(_.includes(producedDays, expectedDay), 'contains correct posiotion numbers');
       });
@@ -259,12 +259,12 @@ describe('<DatesRangePicker />: getDisabledDays', () => {
         0, 1, 2,
         34, 35, 36, 37, 38, 39, 40, 41,
       ]; //disabled days position numbers
-      assert(_.isArray(wrapper.instance().getDisabledDays()), 'return array of numbers');
-      assert.equal(wrapper.instance().getDisabledDays().length, 11, 'return array of length 11');
-      wrapper.instance().getDisabledDays().forEach((day) => {
+      assert(_.isArray(wrapper.instance().getDisabledDaysPositions()), 'return array of numbers');
+      assert.equal(wrapper.instance().getDisabledDaysPositions().length, 11, 'return array of length 11');
+      wrapper.instance().getDisabledDaysPositions().forEach((day) => {
         assert(_.isNumber(day), 'contains numbers');
       });
-      const producedDays = wrapper.instance().getDisabledDays();
+      const producedDays = wrapper.instance().getDisabledDaysPositions();
       shouldReturn.forEach((expectedDay) => {
         assert(_.includes(producedDays, expectedDay), 'contains correct posiotion numbers');
       });
@@ -364,15 +364,15 @@ describe('<DatesRangePicker />: isPrevPageAvailable', () => {
   });
 });
 
-describe('<DatesRangePicker />: getCurrentMonth', () => {
+describe('<DatesRangePicker />: getCurrentDate', () => {
   const date = moment('2018-08-12');
 
   it('return string in format `MMMM YYYY`', () => {
     const wrapper = shallow(<DatesRangePicker
       initializeWith={date} />);
     
-    assert(_.isString(wrapper.instance().getCurrentMonth()), 'return string');
-    assert.equal(wrapper.instance().getCurrentMonth(), date.format('MMMM YYYY'), 'return proper value');
+    assert(_.isString(wrapper.instance().getCurrentDate()), 'return string');
+    assert.equal(wrapper.instance().getCurrentDate(), date.format('MMMM YYYY'), 'return proper value');
   });
 });
 

@@ -52,18 +52,23 @@ class DatesRangePicker extends React.Component {
     this.state = {
       /* moment instance */
       date: props.initializeWith.clone(),
-      /* moment instance */
-      start: undefined,
-      /* moment instance */
-      end: undefined,
     };
   }
 
   buildDays() {
+    /*
+      Return array of dates (strings) like ['31', '1', ...]
+      that used to populate calendar's page.
+    */
     return buildDays(this.state.date, DAYS_ON_PAGE);
   }
 
-  getActiveDays() {
+  getActiveDaysPositions() {
+    /*
+      Return starting and ending positions of dates range that should be displayed as active
+      { start: number, end: number }
+      (position in array returned by `this.buildDays`).
+    */
     const { date } = this.state;
     const {
       start,
@@ -100,7 +105,11 @@ class DatesRangePicker extends React.Component {
     return { start: startPosition, end: endPosition };
   }
 
-  getDisabledDays() {
+  getDisabledDaysPositions() {
+    /*
+      Return position numbers of dates that should be displayed as disabled
+      (position in array returned by `this.buildDays`).
+    */
     const {
       maxDate,
       minDate,
@@ -109,18 +118,20 @@ class DatesRangePicker extends React.Component {
   }
 
   isNextPageAvailable() {
-    return isNextPageAvailable(this.state.date, undefined, this.props.maxDate);
+    return isNextPageAvailable(this.state.date, this.props.maxDate);
   }
 
   isPrevPageAvailable() {
-    return isPrevPageAvailable(this.state.date, undefined, this.props.minDate);
+    return isPrevPageAvailable(this.state.date, this.props.minDate);
   }
 
-  getCurrentMonth() {
+  getCurrentDate() {
+    /* Return currently selected year and month(string) to display in calendar header. */
     return this.state.date.format('MMMM YYYY');
   }
 
-  handleChange = (e, { key, value }) => {
+  handleChange = (e, { key }) => {
+    // call `onChange` with value: { start: moment, end: moment }
     const {
       start,
       end,
@@ -165,10 +176,6 @@ class DatesRangePicker extends React.Component {
 
   render() {
     const rest = getUnhandledProps(DatesRangePicker, this.props);
-    const active = {
-      start: this.props.start,
-      end: this.props.end,
-    };
     return (
       <DatesRangeView
         { ...rest }
@@ -178,9 +185,9 @@ class DatesRangePicker extends React.Component {
         onDayClick={this.handleChange}
         hasPrevPage={this.isPrevPageAvailable()}
         hasNextPage={this.isNextPageAvailable()}
-        currentDate={this.getCurrentMonth()}
-        active={active}
-        disabled={this.getDisabledDays()} />
+        currentDate={this.getCurrentDate()}
+        active={this.getActiveDaysPositions()}
+        disabled={this.getDisabledDaysPositions()} />
     );
   }
 }

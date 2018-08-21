@@ -27,14 +27,19 @@ class HourPicker extends React.Component {
   }
 
   buildHours() {
+    /*
+      Return array of hours (strings) like ['16:00', '17:00', ...]
+      that used to populate calendar's page.
+    */
     return _.range(0, 24).map((h) => {
       return `${h < 10? '0' : ''}${h}`;
     }).map(hour => buildTimeStringWithSuffix(hour, '00', this.props.timeFormat));
   }
 
-  getActiveHour() {
-    /* The only purpose of this method is to return a hour position
-    that should be displayed as active.
+  getActiveHourPosition() {
+    /*
+      Return position of an hour that should be displayed as active
+      (position in array returned by `this.buildHours`).
     */
     if (this.props.value) {
       return this.props.value.hour();
@@ -49,7 +54,11 @@ class HourPicker extends React.Component {
     return isPrevPageAvailable(this.state.date, this.props.minDate);
   }
 
-  getDisabledHours() {
+  getDisabledHoursPositions() {
+    /*
+      Return position numbers of hours that should be displayed as disabled
+      (position in array returned by `this.buildHours`).
+    */
     const {
       disable,
       minDate,
@@ -91,6 +100,7 @@ class HourPicker extends React.Component {
   }
 
   getCurrentDate() {
+    /* Return currently selected month, date and year(string) to display in calendar header. */
     return getCurrentDate(this.state.date);
   }
 
@@ -131,8 +141,8 @@ class HourPicker extends React.Component {
         hasPrevPage={this.isPrevPageAvailable()}
         hasNextPage={this.isNextPageAvailable()}
         onHourClick={this.handleChange}
-        disabled={this.getDisabledHours()}
-        active={this.getActiveHour()}
+        disabled={this.getDisabledHoursPositions()}
+        active={this.getActiveHourPosition()}
         currentDate={this.getCurrentDate()} />
     );
   }

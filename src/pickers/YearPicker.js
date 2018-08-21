@@ -8,29 +8,6 @@ import { getUnhandledProps } from '../lib';
 
 const YEARS_ON_PAGE = 3 * 4;
 
-const isNextPageUnavailable = {
-  byDisable: (lastOnPage/*number*/, disabledYears/*number[]|undefined*/) => {
-    if (_.isNil(disabledYears)) return false;
-    const firstOnNext = lastOnPage + 1;
-    return _.every(_.range(firstOnNext, firstOnNext + YEARS_ON_PAGE), year => disabledYears.indexOf(year) >= 0);
-  },
-  byMaxDate: (lastOnPage/*number*/, maxDate/*number|undefined*/) => {
-    if (_.isNil(maxDate)) return false;
-    return lastOnPage >= maxDate;
-  }
-};
-
-const isPrevPageUnavailable = {
-  byDisable: (firstOnPage/*number*/, disabledYears/*number[]|undefined*/) => {
-    if (_.isNil(disabledYears)) return false;
-    return _.every(_.range(firstOnPage - YEARS_ON_PAGE, firstOnPage), year => disabledYears.indexOf(year) >= 0);
-  },
-  byMinDate: (firstOnPage/*number*/, minDate/*number|undefined*/) => {
-    if (_.isNil(minDate)) return false;
-    return firstOnPage <= minDate;
-  }
-};
-
 class YearPicker extends React.Component {
   /*
     Note:
@@ -46,6 +23,10 @@ class YearPicker extends React.Component {
   }
 
   buildYears() {
+    /*
+      Return array of years (strings) like ['2012', '2013', ...]
+      that used to populate calendar's page.
+    */
     const years = [];
     const first = this.state.date.year();
     for (let i = 0; i < YEARS_ON_PAGE; i++) {
@@ -54,7 +35,11 @@ class YearPicker extends React.Component {
     return years;
   }
 
-  getActiveYear() {
+  getActiveYearPosition() {
+    /*
+      Return position of a year that should be displayed as active
+      (position in array returned by `this.buildYears`).
+    */
     if (!_.isNil(this.props.value)) {
       const years = this.buildYears();
       const yearIndex = years.indexOf(this.props.value.year().toString());
@@ -64,7 +49,11 @@ class YearPicker extends React.Component {
     }
   }
 
-  getDisabledYears() {
+  getDisabledYearsPositions() {
+    /*
+      Return position numbers of years that should be displayed as disabled
+      (position in array returned by `this.buildYears`).
+    */
     let disabled = [];
     const years = this.buildYears();
     if (_.isArray(this.props.disable)) {
@@ -96,25 +85,21 @@ class YearPicker extends React.Component {
   isNextPageAvailable() {
     const {
       maxDate,
-      disable,
     } = this.props;
     const lastOnPage = parseInt(_.last(this.buildYears()));
-    return !_.some([
-      isNextPageUnavailable.byDisable(lastOnPage, _.map(disable, m => m.year())),
-      isNextPageUnavailable.byMaxDate(lastOnPage, _.invoke(maxDate, 'year')),
-    ]);
+
+    if (_.isNil(maxDate)) return true;
+    return lastOnPage < maxDate.year();
   }
 
   isPrevPageAvailable() {
     const {
       minDate,
-      disable,
     } = this.props;
     const firstOnPage = parseInt(_.first(this.buildYears()));
-    return !_.some([
-      isPrevPageUnavailable.byDisable(firstOnPage, _.map(disable, m => m.year())),
-      isPrevPageUnavailable.byMinDate(firstOnPage, _.invoke(minDate, 'year')),
-    ]);
+
+    if (_.isNil(minDate)) return true;
+    return firstOnPage > minDate.year();
   }
 
   handleChange = (e, { value }) => {
@@ -149,8 +134,8 @@ class YearPicker extends React.Component {
         onYearClick={this.handleChange}
         hasPrevPage={this.isPrevPageAvailable()}
         hasNextPage={this.isNextPageAvailable()}
-        disabled={this.getDisabledYears()}
-        active={this.getActiveYear()} />
+        disabled={this.getDisabledYearsPositions()}
+        active={this.getActiveYearPosition()} />
     );
   }
 }

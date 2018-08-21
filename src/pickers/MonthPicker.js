@@ -7,41 +7,6 @@ import MonthView from '../views/MonthView';
 import { getUnhandledProps } from '../lib';
 
 const MONTHS_IN_YEAR = 12;
-const isNextPageUnavailable = {
-  byDisable: (currentDate/*Moment*/, disabledMonths/*Moment[]|undefined*/) => {
-    if (_.isNil(disabledMonths)) return false;
-    const allMonthsFromNextYearDisabled = _.uniq(disabledMonths
-      .filter(month => month.year() === currentDate.year() + 1)
-      .map(month => month.month())).length === 12;
-    if (allMonthsFromNextYearDisabled) {
-      return true;
-    }
-    return false;
-  },
-  byMaxDate: (currentDate/*Moment*/, maxDate/*Moment|undefined*/) => {
-    if (_.isNil(maxDate)) return false;
-    if (currentDate.year() >= maxDate.year()) return true;
-    return false;
-  }
-};
-
-const isPrevPageUnavailable = {
-  byDisable: (currentDate/*Moment*/, disabledMonths/*Moment[]|undefined*/) => {
-    if (_.isNil(disabledMonths)) return false;
-    const allMonthsFromPrevYearDisabled = _.uniq(disabledMonths
-      .filter(month => month.year() === currentDate.year() - 1)
-      .map(month => month.month())).length === 12;
-    if (allMonthsFromPrevYearDisabled) {
-      return true;
-    }
-    return false;
-  },
-  byMinDate: (currentDate/*Moment*/, minDate/*Moment|undefined*/) => {
-    if (_.isNil(minDate)) return false;
-    if (currentDate.year() <= minDate.year()) return true;
-    return false;
-  }
-};
 
 class MonthPicker extends React.Component {
   /*
@@ -58,10 +23,18 @@ class MonthPicker extends React.Component {
   }
 
   buildMonths() {
+    /*
+      Return array of months (strings) like ['Aug', 'Sep', ...]
+      that used to populate calendar's page.
+    */
     return moment.monthsShort();
   }
 
-  getActiveMonth() {
+  getActiveMonthPosition() {
+    /*
+      Return position of a month that should be displayed as active
+      (position in array returned by `this.buildMonths`).
+    */
     if (!_.isNil(this.props.value)) {
       if (this.props.value.year() === this.state.date.year()) {
         return this.props.value.month();
@@ -69,7 +42,11 @@ class MonthPicker extends React.Component {
     }
   }
 
-  getDisabledMonths() {
+  getDisabledMonthsPositions() {
+    /*
+      Return position numbers of months that should be displayed as disabled
+      (position in array returned by `this.buildMonths`).
+    */
     let disabled = [];
     if (_.isArray(this.props.disable)) {
       disabled = disabled.concat(
@@ -106,26 +83,23 @@ class MonthPicker extends React.Component {
   isNextPageAvailable() {
     const {
       maxDate,
-      disable,
     } = this.props;
-    return !_.some([
-      isNextPageUnavailable.byDisable(this.state.date, disable),
-      isNextPageUnavailable.byMaxDate(this.state.date, maxDate),
-    ]);
+    if (_.isNil(maxDate)) return true;
+    if (this.state.date.year() >= maxDate.year()) return false;
+    return true;
   }
 
   isPrevPageAvailable() {
     const {
       minDate,
-      disable,
     } = this.props;
-    return !_.some([
-      isPrevPageUnavailable.byDisable(this.state.date, disable),
-      isPrevPageUnavailable.byMinDate(this.state.date, minDate),
-    ]);
+    if (_.isNil(minDate)) return true;
+    if (this.state.date.year() <= minDate.year()) return false;
+    return true;
   }
 
   getCurrentYear() {
+    /* Return current year(string) to display in calendar header. */
     return this.state.date.year().toString();
   }
 
@@ -162,8 +136,8 @@ class MonthPicker extends React.Component {
         onPrevPageBtnClick={this.switchToPrevPage}
         hasPrevPage={this.isPrevPageAvailable()}
         hasNextPage={this.isNextPageAvailable()}
-        disabled={this.getDisabledMonths()}
-        active={this.getActiveMonth()}
+        disabled={this.getDisabledMonthsPositions()}
+        active={this.getActiveMonthPosition()}
         currentYear={this.getCurrentYear()} />
     );
   }

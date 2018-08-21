@@ -75,7 +75,7 @@ describe('<YearPicker />: buildYears', function() {
   });
 });
 
-describe('<YearPicker />: getActiveYear', function() {
+describe('<YearPicker />: getActiveYearPosition', function() {
   it('works properly when`value` prop provided', () => {
     const date = moment('2015-05-01');
     /*
@@ -89,20 +89,20 @@ describe('<YearPicker />: getActiveYear', function() {
     const wrapper = shallow(<YearPicker
       initializeWith={date}
       value={moment('2016-01-01')} />);
-    assert(_.isFunction(wrapper.instance().getActiveYear), 'has the method');
-    assert(_.isNumber(wrapper.instance().getActiveYear()), 'method returns number');
-    assert.equal(wrapper.instance().getActiveYear(), 1, 'method returns active year index');
+    assert(_.isFunction(wrapper.instance().getActiveYearPosition), 'has the method');
+    assert(_.isNumber(wrapper.instance().getActiveYearPosition()), 'method returns number');
+    assert.equal(wrapper.instance().getActiveYearPosition(), 1, 'method returns active year index');
   });
 
   it('works properly when `value` prop is undefined', () => {
     const date = moment('2015-05-01');
     const wrapper = shallow(<YearPicker
       initializeWith={date} />);
-    assert(_.isUndefined(wrapper.instance().getActiveYear()), 'method returns undefined if `value` prop is undefined');
+    assert(_.isUndefined(wrapper.instance().getActiveYearPosition()), 'method returns undefined if `value` prop is undefined');
   });
 });
 
-describe('<YearPicker />: getDisabledYears', function() {
+describe('<YearPicker />: getDisabledYearsPositions', function() {
   it('works properly when `disable` prop is provided', () => {
     const date = moment('2015-05-01');
     /*
@@ -116,14 +116,14 @@ describe('<YearPicker />: getDisabledYears', function() {
     const wrapper = shallow(<YearPicker
       disable={[moment('2017-01-01'), moment('2019-01-01')]}
       initializeWith={date} />);
-    assert(_.isFunction(wrapper.instance().getDisabledYears), 'has the method');
-    assert(_.isArray(wrapper.instance().getDisabledYears()), 'method returns an array');
-    assert.equal(wrapper.instance().getDisabledYears().length, 2, 'method returns an array of length 2');
-    _.forEach(wrapper.instance().getDisabledYears(), (disabledIndex) => {
+    assert(_.isFunction(wrapper.instance().getDisabledYearsPositions), 'has the method');
+    assert(_.isArray(wrapper.instance().getDisabledYearsPositions()), 'method returns an array');
+    assert.equal(wrapper.instance().getDisabledYearsPositions().length, 2, 'method returns an array of length 2');
+    _.forEach(wrapper.instance().getDisabledYearsPositions(), (disabledIndex) => {
       assert(_.isNumber(disabledIndex), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledYears(), 2), 'year at position 2 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 4), 'year at position 4 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 2), 'year at position 2 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 4), 'year at position 4 is disabled');
   });
 
   it('works properly when `maxDate` prop is provided', () => {
@@ -139,15 +139,15 @@ describe('<YearPicker />: getDisabledYears', function() {
     const wrapper = shallow(<YearPicker
       maxDate={moment('2022-01-01')}
       initializeWith={date} />);
-    assert(_.isArray(wrapper.instance().getDisabledYears()), 'method returns an array');
-    assert.equal(wrapper.instance().getDisabledYears().length, 4, 'method returns an array of length 4');
-    _.forEach(wrapper.instance().getDisabledYears(), (disabledIndex) => {
+    assert(_.isArray(wrapper.instance().getDisabledYearsPositions()), 'method returns an array');
+    assert.equal(wrapper.instance().getDisabledYearsPositions().length, 4, 'method returns an array of length 4');
+    _.forEach(wrapper.instance().getDisabledYearsPositions(), (disabledIndex) => {
       assert(_.isNumber(disabledIndex), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledYears(), 8), 'year at position 8 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 9), 'year at position 9 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 10), 'year at position 10 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 11), 'year at position 11 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 8), 'year at position 8 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 9), 'year at position 9 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 10), 'year at position 10 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 11), 'year at position 11 is disabled');
   });
 
   it('works properly when `minDate` prop is provided', () => {
@@ -163,13 +163,13 @@ describe('<YearPicker />: getDisabledYears', function() {
     const wrapper = shallow(<YearPicker
       minDate={moment('2017-01-01')}
       initializeWith={date} />);
-    assert(_.isArray(wrapper.instance().getDisabledYears()), 'method returns an array');
-    assert.equal(wrapper.instance().getDisabledYears().length, 2, 'method returns an array of length 2');
-    _.forEach(wrapper.instance().getDisabledYears(), (disabledIndex) => {
+    assert(_.isArray(wrapper.instance().getDisabledYearsPositions()), 'method returns an array');
+    assert.equal(wrapper.instance().getDisabledYearsPositions().length, 2, 'method returns an array of length 2');
+    _.forEach(wrapper.instance().getDisabledYearsPositions(), (disabledIndex) => {
       assert(_.isNumber(disabledIndex), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledYears(), 0), 'year at position 0 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 1), 'year at position 1 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 0), 'year at position 0 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 1), 'year at position 1 is disabled');
   });
 
   it('works properly when `minDate`, `maxDate`, `disable` props are all provided', () => {
@@ -188,15 +188,15 @@ describe('<YearPicker />: getDisabledYears', function() {
       disable={[moment('2019-01-01')]}
       initializeWith={date} />);
     /* disabled indexes: 0, 1, 4, 11 */
-    assert(_.isArray(wrapper.instance().getDisabledYears()), 'method returns an array');
-    assert.equal(wrapper.instance().getDisabledYears().length, 4, 'method returns an array of length 4');
-    _.forEach(wrapper.instance().getDisabledYears(), (disabledIndex) => {
+    assert(_.isArray(wrapper.instance().getDisabledYearsPositions()), 'method returns an array');
+    assert.equal(wrapper.instance().getDisabledYearsPositions().length, 4, 'method returns an array of length 4');
+    _.forEach(wrapper.instance().getDisabledYearsPositions(), (disabledIndex) => {
       assert(_.isNumber(disabledIndex), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledYears(), 0), 'year at position 0 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 1), 'year at position 1 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 4), 'year at position 4 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledYears(), 11), 'year at position 11 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 0), 'year at position 0 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 1), 'year at position 1 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 4), 'year at position 4 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledYearsPositions(), 11), 'year at position 11 is disabled');
   });
 
   it('works properly when `disable`, `minDate`, `maxDate` props are undefined', () => {
@@ -211,13 +211,13 @@ describe('<YearPicker />: getDisabledYears', function() {
     */
     const wrapper = shallow(<YearPicker
       initializeWith={date} />);
-    assert(_.isFunction(wrapper.instance().getDisabledYears), 'has the method');
-    assert(_.isUndefined(wrapper.instance().getDisabledYears()), 'method returns undefined');
+    assert(_.isFunction(wrapper.instance().getDisabledYearsPositions), 'has the method');
+    assert(_.isUndefined(wrapper.instance().getDisabledYearsPositions()), 'method returns undefined');
   });
 });
 
 describe('<YearPicker />: isNextPageAvailable', function() {
-  describe('`maxDate`, `disable` props are not provided', function() {
+  describe('`maxDate` prop is not provided', function() {
     const date = moment('2015-05-01');
     /*
     [
@@ -292,55 +292,10 @@ describe('<YearPicker />: isNextPageAvailable', function() {
       assert.isTrue(wrapper.instance().isNextPageAvailable(), 'returns true');
     });
   });
-
-  describe('`disable` contains some years from next page', function() {
-    const date = moment('2015-05-01');
-    /*
-    [
-      '2015', '2016', '2017',
-      '2018', '2019', '2020',
-      '2021', '2022', '2023',
-      '2024', '2025', '2026',
-    ]
-    */
-    const wrapper = shallow(<YearPicker
-      disable={[moment('2027-01-01'), moment('2028-01-01'), moment('2030-01-01')]}
-      initializeWith={date} />);
-
-    it('returns true', () => {
-      assert.isTrue(wrapper.instance().isNextPageAvailable(), 'returns true');
-    });
-  });
-
-  describe('`disable` contains all years from the next page', function() {
-    const date = moment('2015-05-01');
-    /*
-    [
-      '2015', '2016', '2017',
-      '2018', '2019', '2020',
-      '2021', '2022', '2023',
-      '2024', '2025', '2026',
-    ]
-    */
-    const wrapper = shallow(<YearPicker
-      disable={[
-        moment('2019-01-01'),
-        moment('2027-01-01'), moment('2028-01-01'), moment('2029-01-01'),
-        moment('2030-01-01'), moment('2031-01-01'), moment('2032-01-01'),
-        moment('2033-01-01'), moment('2034-01-01'), moment('2035-01-01'),
-        moment('2036-01-01'), moment('2037-01-01'), moment('2038-01-01'),
-        moment('2050-01-01'),
-      ]}
-      initializeWith={date} />);
-
-    it('returns false', () => {
-      assert.isFalse(wrapper.instance().isNextPageAvailable(), 'returns false');
-    });
-  });
 });
 
 describe('<YearPicker />: isPrevPageAvailable', function() {
-  describe('`minDate`, `disable` props are not provided', function() {
+  describe('`minDate` prop is not provided', function() {
     const date = moment('2015-05-01');
     /*
     [
@@ -413,51 +368,6 @@ describe('<YearPicker />: isPrevPageAvailable', function() {
 
     it('returns true', () => {
       assert.isTrue(wrapper.instance().isPrevPageAvailable(), 'returns true');
-    });
-  });
-
-  describe('`disable` contains some years from previous page', function() {
-    const date = moment('2015-05-01');
-    /*
-    [
-      '2015', '2016', '2017',
-      '2018', '2019', '2020',
-      '2021', '2022', '2023',
-      '2024', '2025', '2026',
-    ]
-    */
-    const wrapper = shallow(<YearPicker
-      disable={[moment('2014-01-01'), moment('2013-01-01'), moment('2000-01-01')]}
-      initializeWith={date} />);
-
-    it('returns true', () => {
-      assert.isTrue(wrapper.instance().isPrevPageAvailable(), 'returns true');
-    });
-  });
-
-  describe('`disable` contains all years from the previous page', function() {
-    const date = moment('2015-05-01');
-    /*
-    [
-      '2015', '2016', '2017',
-      '2018', '2019', '2020',
-      '2021', '2022', '2023',
-      '2024', '2025', '2026',
-    ]
-    */
-    const wrapper = shallow(<YearPicker
-      disable={[
-        moment('1999-01-01'),
-        moment('2003-01-01'), moment('2004-01-01'), moment('2005-01-01'),
-        moment('2006-01-01'), moment('2007-01-01'), moment('2008-01-01'),
-        moment('2009-01-01'), moment('2010-01-01'), moment('2011-01-01'),
-        moment('2012-01-01'), moment('2013-01-01'), moment('2014-01-01'),
-        moment('2025-01-01'),
-      ]}
-      initializeWith={date} />);
-
-    it('returns false', () => {
-      assert.isFalse(wrapper.instance().isPrevPageAvailable(), 'returns false');
     });
   });
 });

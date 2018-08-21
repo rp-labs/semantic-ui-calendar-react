@@ -66,32 +66,32 @@ describe('<MonthPicker />: buildMonths', () => {
   });
 });
 
-describe('<MonthPicker />: getActiveMonth', () => {
+describe('<MonthPicker />: getActiveMonthPosition', () => {
   const date = moment('2015-05-01');
   /* current year 2015 */
   it('return index of active month', () => {
     const wrapper = shallow(<MonthPicker
       value={moment('2015-02-18')}
       initializeWith={date} />);
-    assert(_.isNumber(wrapper.instance().getActiveMonth()), 'return number');
-    assert.equal(wrapper.instance().getActiveMonth(), 1, 'return index 1 (means February)');
+    assert(_.isNumber(wrapper.instance().getActiveMonthPosition()), 'return number');
+    assert.equal(wrapper.instance().getActiveMonthPosition(), 1, 'return index 1 (means February)');
   });
 
   it('return undefined if year of `value` does not equal to year of `date`', () => {
     const wrapper = shallow(<MonthPicker
       value={moment('2020-02-18')}
       initializeWith={date} />);
-    assert(_.isUndefined(wrapper.instance().getActiveMonth()), 'return undefined');
+    assert(_.isUndefined(wrapper.instance().getActiveMonthPosition()), 'return undefined');
   });
 
   it('return undefined `value` is not provided', () => {
     const wrapper = shallow(<MonthPicker
       initializeWith={date} />);
-    assert(_.isUndefined(wrapper.instance().getActiveMonth()), 'return undefined');
+    assert(_.isUndefined(wrapper.instance().getActiveMonthPosition()), 'return undefined');
   });
 });
 
-describe('<MonthPicker />: getDisabledMonths', () => {
+describe('<MonthPicker />: getDisabledMonthsPositions', () => {
   const date = moment('2015-05-01');
   /* current year 2015 */
 
@@ -100,13 +100,13 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       disable={[moment('2015-04-01'), moment('2015-07-01')]}
       initializeWith={date} />);
     /* disabled indexes: 3, 6 */
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 2, 'return array of length 2');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 2, 'return array of length 2');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 3), 'month in position 3 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 6), 'month in position 6 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 3), 'month in position 3 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 6), 'month in position 6 is disabled');
   });
 
   it('return indexes of disabled months in current year only', () => {
@@ -114,13 +114,13 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       disable={[moment('2015-04-01'), moment('2015-07-01'), moment('2014-01-01'), moment('2016-09-01')]}
       initializeWith={date} />);
     /* disabled indexes: 3, 6 */
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 2, 'return array of length 2');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 2, 'return array of length 2');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 3), 'month in position 3 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 6), 'month in position 6 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 3), 'month in position 3 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 6), 'month in position 6 is disabled');
   });
 
   it('works properly if `minDate` prop is provided (which is in current year)', () => {
@@ -128,13 +128,13 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       minDate={moment('2015-03-01')}
       initializeWith={date} />);
     /* disabled indexes: 0, 1 */
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 2, 'return array of length 2');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 2, 'return array of length 2');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 0), 'month in position 0 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 1), 'month in position 1 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 0), 'month in position 0 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 1), 'month in position 1 is disabled');
   });
 
   it('works properly if `minDate` prop is provided (which is before the current year)', () => {
@@ -142,7 +142,7 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       minDate={moment('2014-03-01')}
       initializeWith={date} />);
     /* disabled indexes: none */
-    assert(_.isUndefined(wrapper.instance().getDisabledMonths()), 'return undefined');
+    assert(_.isUndefined(wrapper.instance().getDisabledMonthsPositions()), 'return undefined');
   });
 
   it('works properly if `minDate` prop is provided (which is after the current year)', () => {
@@ -151,12 +151,12 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       initializeWith={date} />);
     /* disabled indexes: all */
     const disabledRange = _.range(0, 12);
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 12, 'return array of length 12');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 12, 'return array of length 12');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.includes(disabledRange, month), 'includes all months');
     });
   });
@@ -166,14 +166,14 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       maxDate={moment('2015-09-01')}
       initializeWith={date} />);
     /* disabled indexes: 9, 10, 11 */
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 3, 'return array of length 3');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 3, 'return array of length 3');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 9), 'month in position 9 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 10), 'month in position 10 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 11), 'month in position 11 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 9), 'month in position 9 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 10), 'month in position 10 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 11), 'month in position 11 is disabled');
   });
 
   it('works properly if `maxDate` prop is provided (which is after the current year)', () => {
@@ -181,7 +181,7 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       maxDate={moment('2016-03-01')}
       initializeWith={date} />);
     /* disabled indexes: none */
-    assert(_.isUndefined(wrapper.instance().getDisabledMonths()), 'return undefined');
+    assert(_.isUndefined(wrapper.instance().getDisabledMonthsPositions()), 'return undefined');
   });
 
   it('works properly if `maxDate` prop is provided (which is before the current year)', () => {
@@ -190,12 +190,12 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       initializeWith={date} />);
     /* disabled indexes: all */
     const disabledRange = _.range(0, 12);
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 12, 'return array of length 12');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 12, 'return array of length 12');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.includes(disabledRange, month), 'includes all months');
     });
   });
@@ -207,22 +207,22 @@ describe('<MonthPicker />: getDisabledMonths', () => {
       disable={[moment('2015-06-01')]}
       initializeWith={date} />);
     /* disabled indexes: 0, 5, 10, 11 */
-    assert(_.isArray(wrapper.instance().getDisabledMonths()), 'return array');
-    assert.equal(wrapper.instance().getDisabledMonths().length, 4, 'return array of length 4');
-    wrapper.instance().getDisabledMonths().forEach((month) => {
+    assert(_.isArray(wrapper.instance().getDisabledMonthsPositions()), 'return array');
+    assert.equal(wrapper.instance().getDisabledMonthsPositions().length, 4, 'return array of length 4');
+    wrapper.instance().getDisabledMonthsPositions().forEach((month) => {
       assert(_.isNumber(month), 'contains numbers only');
     });
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 0), 'month at position 0 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 5), 'month at position 5 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 10), 'month at position 10 is disabled');
-    assert(_.includes(wrapper.instance().getDisabledMonths(), 11), 'month at position 11 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 0), 'month at position 0 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 5), 'month at position 5 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 10), 'month at position 10 is disabled');
+    assert(_.includes(wrapper.instance().getDisabledMonthsPositions(), 11), 'month at position 11 is disabled');
   });
 
   it('works properly if `maxDate`, `minDate`, `disabled` props are all undefined', () => {
     const wrapper = shallow(<MonthPicker
       initializeWith={date} />);
     /* disabled indexes: none */
-    assert(_.isUndefined(wrapper.instance().getDisabledMonths()), 'return undefined');
+    assert(_.isUndefined(wrapper.instance().getDisabledMonthsPositions()), 'return undefined');
   });
 });
 
@@ -263,28 +263,6 @@ describe('<MonthPicker />: isNextPageAvailable', () => {
     assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
     assert.isTrue(wrapper.instance().isNextPageAvailable(), 'return true');
   });
-
-  it('return false if `disable` contains all years from the next page', () => {
-    const wrapper = shallow(<MonthPicker
-      disable={[
-        moment('2016-01-01'), moment('2016-02-01'), moment('2016-03-01'),
-        moment('2016-04-01'), moment('2016-05-01'), moment('2016-06-01'),
-        moment('2016-07-01'), moment('2016-08-01'), moment('2016-09-01'),
-        moment('2016-10-01'), moment('2016-11-01'), moment('2016-12-01'),
-      ]}
-      initializeWith={date} />);
-    
-    assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
-    assert.isFalse(wrapper.instance().isNextPageAvailable(), 'return false');
-  });
-
-  it('return true if `disable` and `maxDate` are undefined', () => {
-    const wrapper = shallow(<MonthPicker
-      initializeWith={date} />);
-    
-    assert(_.isBoolean(wrapper.instance().isNextPageAvailable()), 'return boolean');
-    assert.isTrue(wrapper.instance().isNextPageAvailable(), 'return true');
-  });
 });
 
 describe('<MonthPicker />: isPrevPageAvailable', () => {
@@ -319,28 +297,6 @@ describe('<MonthPicker />: isPrevPageAvailable', () => {
   it('return true if minDate is in a year before previous year', () => {
     const wrapper = shallow(<MonthPicker
       minDate={moment('2000-11-01')}
-      initializeWith={date} />);
-    
-    assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
-    assert.isTrue(wrapper.instance().isPrevPageAvailable(), 'return true');
-  });
-
-  it('return false if `disable` contains all years from the previous page', () => {
-    const wrapper = shallow(<MonthPicker
-      disable={[
-        moment('2014-01-01'), moment('2014-02-01'), moment('2014-03-01'),
-        moment('2014-04-01'), moment('2014-05-01'), moment('2014-06-01'),
-        moment('2014-07-01'), moment('2014-08-01'), moment('2014-09-01'),
-        moment('2014-10-01'), moment('2014-11-01'), moment('2014-12-01'),
-      ]}
-      initializeWith={date} />);
-    
-    assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
-    assert.isFalse(wrapper.instance().isPrevPageAvailable(), 'return false');
-  });
-
-  it('return true if `disable` and `minDate` are undefined', () => {
-    const wrapper = shallow(<MonthPicker
       initializeWith={date} />);
     
     assert(_.isBoolean(wrapper.instance().isPrevPageAvailable()), 'return boolean');
