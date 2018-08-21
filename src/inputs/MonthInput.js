@@ -6,7 +6,7 @@ import _ from 'lodash';
 import InputView from '../views/InputView';
 import MonthPicker from '../pickers/MonthPicker';
 import {
-  parseInput,
+  parseValue,
   parseArrayOrValue,
   getInitializer,
 } from './parse';
@@ -43,8 +43,8 @@ class MonthInput extends React.Component {
         value={value}>
         <MonthPicker
           onChange={this.handleSelect}
-          initializeWith={getInitializer(value, initialDate, dateFormat)}
-          value={parseInput(value, dateFormat)}
+          initializeWith={getInitializer({ initialDate, dateFormat })}
+          value={parseValue(value, dateFormat)}
           disable={parseArrayOrValue(disable, dateFormat)}
           maxDate={parseArrayOrValue(maxDate, dateFormat)}
           minDate={parseArrayOrValue(minDate, dateFormat)} />

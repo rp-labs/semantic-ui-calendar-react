@@ -9,8 +9,8 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import HourPicker from '../../src/pickers/timePicker/HourPicker';
-import HourView from '../../src/views/HourView';
+import HourPicker from '../../../src/pickers/timePicker/HourPicker';
+import HourView from '../../../src/views/HourView';
 
 Enzyme.configure({ adapter: new Adapter() });
 

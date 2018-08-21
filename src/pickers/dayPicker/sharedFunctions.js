@@ -24,6 +24,7 @@ export function getBrakepoints(date/*moment*/) {
   dateClone.startOf('month').startOf('week');
   if (dateClone.month() !== currentMonth) {
     brakepoints.push(dateClone.endOf('month').date());
+    dateClone.add(1, 'month');
   }
   brakepoints.push(dateClone.endOf('month').date());
   return brakepoints;

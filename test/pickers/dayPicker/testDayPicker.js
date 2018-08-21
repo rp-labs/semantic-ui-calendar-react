@@ -9,8 +9,8 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import DayPicker from '../../src/pickers/dayPicker/DayPicker';
-import DayView from '../../src/views/DayView';
+import DayPicker from '../../../src/pickers/dayPicker/DayPicker';
+import DayView from '../../../src/views/DayView';
 
 Enzyme.configure({ adapter: new Adapter() });
 

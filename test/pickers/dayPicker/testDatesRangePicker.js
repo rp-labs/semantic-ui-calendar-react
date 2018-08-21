@@ -9,8 +9,8 @@ import React from 'react';
 import _ from 'lodash';
 import moment from 'moment';
 
-import DatesRangePicker from '../../src/pickers/dayPicker/DatesRangePicker';
-import DatesRangeView from '../../src/views/DatesRangeView';
+import DatesRangePicker from '../../../src/pickers/dayPicker/DatesRangePicker';
+import DatesRangeView from '../../../src/views/DatesRangeView';
 
 Enzyme.configure({ adapter: new Adapter() });
 

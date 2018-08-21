@@ -8,26 +8,25 @@ import YearPicker from '../pickers/YearPicker';
 import MonthPicker from '../pickers/MonthPicker';
 import DayPicker from '../pickers/dayPicker/DayPicker';
 import {
-  parseInput,
   parseArrayOrValue,
   getInitializer,
+  parseValue,
 } from './parse';
 import { getUnhandledProps } from '../lib';
-import InputMixin from './InputMixin';
 
 function getNextMode(currentMode) {
   if (currentMode === 'year') return 'month';
-  if (currentMode === 'monh') return 'day';
+  if (currentMode === 'month') return 'day';
   return 'year';
 }
 
 function getPrevMode(currentMode) {
   if (currentMode === 'day') return 'month';
-  if (currentMode === 'monh') return 'year';
+  if (currentMode === 'month') return 'year';
   return 'day';
 }
 
-class DateInput extends InputMixin {
+class DateInput extends React.Component {
   constructor(props) {
     super(props);
     /*
@@ -40,12 +39,19 @@ class DateInput extends InputMixin {
     this.state = {
       mode: props.startMode,
     };
+    const parsedValue = parseValue(props.value);
+    if (parsedValue) {
+      this.state.year = parsedValue.year();
+      this.state.month = parsedValue.month();
+      this.state.date = parsedValue.date();
+    }
   }
 
   getDateParams() {
     /* 
-      return undefined if none of [ 'year', 'month', 'date' ]
-      state fields defined
+      Return date params that are used for picker initialization.
+      Return undefined if none of [ 'year', 'month', 'date' ]
+      state fields defined.
     */
     const {
       year,
@@ -67,10 +73,11 @@ class DateInput extends InputMixin {
       maxDate,
     } = this.props;
     const pickerProps = {
+      hasHeader: true,
       onChange: this.handleSelect,
       onHeaderClick: this.switchToPrevMode,
-      initializeWith: getInitializer(this.getInputValue(), initialDate, dateFormat, this.getDateParams()),
-      value: parseInput(value, dateFormat),
+      initializeWith: getInitializer({ initialDate, dateFormat, dateParams: this.getDateParams() }),
+      value: parseValue(value, dateFormat),
       disable: parseArrayOrValue(disable),
       minDate: parseArrayOrValue(minDate),
       maxDate: parseArrayOrValue(maxDate),

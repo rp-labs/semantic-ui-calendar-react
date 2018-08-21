@@ -6,12 +6,11 @@ import _ from 'lodash';
 import InputView from '../views/InputView';
 import YearPicker from '../pickers/YearPicker';
 import {
-  parseInput,
+  parseValue,
   parseArrayOrValue,
   getInitializer,
 } from './parse';
 import { getUnhandledProps } from '../lib';
-import InputMixin from './InputMixin';
 
 class YearInput extends React.Component {
 
@@ -44,8 +43,8 @@ class YearInput extends React.Component {
         value={value}>
         <YearPicker
           onChange={this.handleSelect}
-          initializeWith={getInitializer(value, initialDate, dateFormat)}
-          value={parseInput(value, dateFormat)}
+          initializeWith={getInitializer({ initialDate, dateFormat })}
+          value={parseValue(value, dateFormat)}
           disable={parseArrayOrValue(disable, dateFormat)}
           maxDate={parseArrayOrValue(maxDate, dateFormat)}
           minDate={parseArrayOrValue(minDate, dateFormat)} />

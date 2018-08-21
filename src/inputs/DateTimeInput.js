@@ -10,16 +10,21 @@ import DayPicker from '../pickers/dayPicker/DayPicker';
 import HourPicker from '../pickers/timePicker/HourPicker';
 import MinutePicker from '../pickers/timePicker/MinutePicker';
 import {
-  parseInput,
+  parseValue,
   parseArrayOrValue,
   getInitializer,
 } from './parse';
 import { getUnhandledProps } from '../lib';
-import InputMixin from './InputMixin';
+
+const TIME_FORMAT = {
+  '24': 'HH:mm',
+  'AMPM': 'hh:mm A',
+  'ampm': 'hh:mm a',
+};
 
 function getNextMode(currentMode) {
   if (currentMode === 'year') return 'month';
-  if (currentMode === 'monh') return 'day';
+  if (currentMode === 'month') return 'day';
   if (currentMode === 'day') return 'hour';
   if (currentMode === 'hour') return 'minute';
   return 'year';
@@ -29,11 +34,11 @@ function getPrevMode(currentMode) {
   if (currentMode === 'minute') return 'hour';
   if (currentMode === 'hour') return 'day';
   if (currentMode === 'day') return 'month';
-  if (currentMode === 'monh') return 'year';
+  if (currentMode === 'month') return 'year';
   return 'minute';
 }
 
-class DateTimeInput extends InputMixin {
+class DateTimeInput extends React.Component {
   constructor(props) {
     super(props);
     /*
@@ -48,12 +53,21 @@ class DateTimeInput extends InputMixin {
     this.state = {
       mode: props.startMode,
     };
+    const parsedValue = parseValue(props.value);
+    if (parsedValue) {
+      this.state.year = parsedValue.year();
+      this.state.month = parsedValue.month();
+      this.state.date = parsedValue.date();
+      this.state.hour = parsedValue.hour();
+      this.state.minute = parsedValue.minute();
+    }
   }
 
   getDateParams() {
     /* 
-      return undefined if none of [ 'year', 'month', 'date', 'hour', 'minute' ]
-      state fields defined
+      Return date params that are used for picker initialization.
+      Return undefined if none of [ 'year', 'month', 'date', 'hour', 'minute' ]
+      state fields defined.
     */
     const {
       year,
@@ -75,12 +89,15 @@ class DateTimeInput extends InputMixin {
       disable,
       minDate,
       maxDate,
+      timeFormat,
     } = this.props;
+    const dateTimeFormat = `${dateFormat} ${TIME_FORMAT[timeFormat]}`;
     const pickerProps = {
+      hasHeader: true,
       onChange: this.handleSelect,
       onHeaderClick: this.switchToPrevMode,
-      initializeWith: getInitializer(this.getInputValue(), initialDate, dateFormat, this.getDateParams()),
-      value: parseInput(value, dateFormat),
+      initializeWith: getInitializer({ initialDate, dateFormat: dateTimeFormat, dateParams: this.getDateParams() }),
+      value: parseValue(value, dateTimeFormat),
       disable: parseArrayOrValue(disable),
       minDate: parseArrayOrValue(minDate),
       maxDate: parseArrayOrValue(maxDate),
@@ -93,12 +110,12 @@ class DateTimeInput extends InputMixin {
       return <MonthPicker key={ value } { ...pickerProps } />;
     }
     if (mode === 'day') {
-        return <DayPicker key={ value } { ...pickerProps } />;
+      return <DayPicker key={ value } { ...pickerProps } />;
     }
     if (mode === 'hour') {
-        return <HourPicker key={ value } { ...pickerProps } />;
+      return <HourPicker key={ value } timeFormat={ this.props.timeFormat } { ...pickerProps } />;
     }
-    return <MinutePicker key={ value } { ...pickerProps } />;
+    return <MinutePicker key={ value } timeFormat={ this.props.timeFormat } { ...pickerProps } />;
   }
 
   switchToNextMode = () => {
@@ -122,7 +139,8 @@ class DateTimeInput extends InputMixin {
       if (mode !== 'minute') {
         nextMode = getNextMode(mode);
       } else {
-        const outValue = moment(value).format(this.props.dateFormat);
+        const timeFormatStr = TIME_FORMAT[this.props.timeFormat];
+        const outValue = moment(value).format(`${this.props.dateFormat} ${timeFormatStr}`);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
       return { mode: nextMode, ...value };
@@ -150,6 +168,8 @@ DateTimeInput.propTypes = {
   value: PropTypes.string,
   /** Moment date formatting string. */
   dateFormat: PropTypes.string,
+  /** Time format ["AMPM", "ampm", "24"] */
+  timeFormat: PropTypes.string,
   /** Date to display initially when no date is selected. */
   initialDate: PropTypes.oneOfType([
     PropTypes.string,
@@ -184,7 +204,8 @@ DateTimeInput.propTypes = {
 };
 
 DateTimeInput.defaultProps = {
-  dateFormat: 'YYYY',
+  dateFormat: 'YYYY-MM-DD',
+  timeFormat: '24',
   startMode: 'day',
 };
 

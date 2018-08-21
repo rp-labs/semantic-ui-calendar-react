@@ -8,7 +8,7 @@ import {
   getDefaultEnabledDayPositions,
   isNextPageUnavailable,
   isPrevPageUnavailable,
-} from '../../src/pickers/dayPicker/sharedFunctions';
+} from '../../../src/pickers/dayPicker/sharedFunctions';
 
 describe('getDaysArray', () => {
   const start = 30;
@@ -33,9 +33,9 @@ describe('getDaysArray', () => {
 });
 
 describe('getBrakepoints', () => {
-  const date = moment('2018-08-12');
 
-  it('return array of numbers', () => {
+  it('return array of correct numbers', () => {
+    const date = moment('2018-08-12');
     /*[
       29, 30, 31, 1, 2, 3, 4,
       5, 6, 7, 8, 9, 10, 11,
@@ -46,6 +46,25 @@ describe('getBrakepoints', () => {
     ]
     */
     const shouldReturn = [31, 31];
+    assert(_.isArray(getBrakepoints(date)), 'return array');
+    assert.equal(getBrakepoints(date).length, 2, 'return array of length 2');
+    getBrakepoints(date).forEach((bp, i) => {
+      assert.equal(bp, shouldReturn[i], 'contains corect brakepoints');
+    });
+  });
+
+  it('return array of correct numbers', () => {
+    const date = moment('2018-09-12');
+    /*[
+      26, 27, 28, 29, 30, 31, 1,
+      2, 3, 4, 5, 6, 7, 8,
+      9, 10, 11, 12, 13, 14, 15,
+      16, 17, 18, 19, 20, 21, 22,
+      23, 24, 25, 26, 27, 28, 29,
+      30, 1, 2, 3, 4, 5, 6,
+    ]
+    */
+    const shouldReturn = [31, 30];
     assert(_.isArray(getBrakepoints(date)), 'return array');
     assert.equal(getBrakepoints(date).length, 2, 'return array of length 2');
     getBrakepoints(date).forEach((bp, i) => {

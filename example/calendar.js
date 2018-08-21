@@ -80,6 +80,7 @@ class DateTimeForm extends React.Component {
           onChange={this.handleChange} />
         <br /> */}
         <DateTimeInput
+          timeFormat="ampm"
           placeholder="Date Time"
           className="example-calendar-input"
           name="dateTime"
