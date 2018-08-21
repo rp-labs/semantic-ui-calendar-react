@@ -61,24 +61,93 @@ describe('<DatesRangePicker />', () => {
 });
 
 describe('<DatesRangePicker />: buildDays', () => {
-  const date = moment('2018-08-12');
 
-  it('return array of strings', () => {
-    const wrapper = shallow(<DatesRangePicker initializeWith={date} />);
-    const shouldReturn = [
-      '29', '30', '31', '1', '2', '3', '4',
-      '5', '6', '7', '8', '9', '10', '11',
-      '12', '13', '14', '15', '16', '17', '18',
-      '19', '20', '21', '22', '23', '24', '25',
-      '26', '27', '28', '29', '30', '31', '1',
-      '2', '3', '4', '5', '6', '7', '8',
-    ];
-    assert(_.isArray(wrapper.instance().buildDays()), 'return array');
-    assert.equal(wrapper.instance().buildDays().length, 42, 'return array of length 42');
-    wrapper.instance().buildDays().forEach((date, i) => {
-      assert.equal(date, shouldReturn[i], 'contains corect dates');
+  describe('current date is 2018-08-12', () => {
+    const date = moment('2018-08-12');
+
+    it('return array of strings', () => {
+      const wrapper = shallow(<DatesRangePicker initializeWith={date} />);
+      const shouldReturn = [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ];
+      assert(_.isArray(wrapper.instance().buildDays()), 'return array');
+      assert.equal(wrapper.instance().buildDays().length, 42, 'return array of length 42');
+      wrapper.instance().buildDays().forEach((date, i) => {
+        assert.equal(date, shouldReturn[i], 'contains corect dates');
+      });
     });
   });
+
+  describe('current date is 2018-09-12', () => {
+    const date = moment('2018-09-12');
+
+    it('return array of strings', () => {
+      const wrapper = shallow(<DatesRangePicker initializeWith={date} />);
+      const shouldReturn = [
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+        '9', '10', '11', '12', '13', '14', '15',
+        '16', '17', '18', '19', '20', '21', '22',
+        '23', '24', '25', '26', '27', '28', '29',
+        '30', '1', '2', '3', '4', '5', '6',
+      ];
+      assert(_.isArray(wrapper.instance().buildDays()), 'return array');
+      assert.equal(wrapper.instance().buildDays().length, 42, 'return array of length 42');
+      wrapper.instance().buildDays().forEach((date, i) => {
+        assert.equal(date, shouldReturn[i], 'contains corect dates');
+      });
+    });
+  });
+
+  describe('current date is 2017-02-12', () => {
+    const date = moment('2017-02-12');
+
+    it('return array of strings', () => {
+      const wrapper = shallow(<DatesRangePicker initializeWith={date} />);
+      const shouldReturn = [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+      ];
+ 
+      assert(_.isArray(wrapper.instance().buildDays()), 'return array');
+      assert.equal(wrapper.instance().buildDays().length, 42, 'return array of length 42');
+      wrapper.instance().buildDays().forEach((date, i) => {
+        assert.equal(date, shouldReturn[i], 'contains corect dates');
+      });
+    });
+  });
+
+  describe('current date is 2029-11-01', () => {
+    const date = moment('2029-11-01');
+
+    it('return array of strings', () => {
+      const wrapper = shallow(<DatesRangePicker initializeWith={date} />);
+      const shouldReturn = [
+        '28', '29', '30', '31', '1', '2', '3',
+        '4', '5', '6', '7', '8', '9', '10',
+        '11', '12', '13', '14', '15', '16', '17',
+        '18', '19', '20', '21', '22', '23', '24',
+        '25', '26', '27', '28', '29', '30', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ];
+ 
+      assert(_.isArray(wrapper.instance().buildDays()), 'return array');
+      assert.equal(wrapper.instance().buildDays().length, 42, 'return array of length 42');
+      wrapper.instance().buildDays().forEach((date, i) => {
+        assert.equal(date, shouldReturn[i], 'contains corect dates');
+      });
+    });
+  });
+  
 });
 
 describe('<DatesRangePicker />: getActiveDaysPositions', () => {

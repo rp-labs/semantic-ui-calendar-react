@@ -1,4 +1,6 @@
 const { JSDOM } = require('jsdom');
+const moment = require('moment');
+moment.locale('en');
 
 const { window } = new JSDOM('<!doctype html><html><body></body></html>', {
   url: 'https://example.com',
