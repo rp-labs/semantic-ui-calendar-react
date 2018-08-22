@@ -49,6 +49,7 @@ class DateTimeForm extends React.Component {
       <Form>
         <DateInput
           placeholder="Date"
+          closable
           className="example-calendar-input"
           name="date"
           value={this.state.date}
@@ -74,7 +75,6 @@ class DateTimeForm extends React.Component {
           onChange={this.handleChange} />
         <br />
         <DateTimeInput
-          timeFormat="ampm"
           placeholder="Date Time"
           className="example-calendar-input"
           name="dateTime"

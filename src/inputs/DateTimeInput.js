@@ -85,8 +85,9 @@ class DateTimeInput extends React.Component {
       minDate,
       maxDate,
       timeFormat,
+      divider,
     } = this.props;
-    const dateTimeFormat = `${dateFormat} ${TIME_FORMAT[timeFormat]}`;
+    const dateTimeFormat = `${dateFormat}${divider}${TIME_FORMAT[timeFormat]}`;
     const pickerProps = {
       displayWeeks: true,
       hasHeader: true,
@@ -137,7 +138,7 @@ class DateTimeInput extends React.Component {
         nextMode = getNextMode(mode);
       } else {
         const timeFormatStr = TIME_FORMAT[this.props.timeFormat];
-        const outValue = moment(value).format(`${this.props.dateFormat} ${timeFormatStr}`);
+        const outValue = moment(value).format(`${this.props.dateFormat}${this.props.divider}${timeFormatStr}`);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
       return { mode: nextMode, ...value };
@@ -198,12 +199,15 @@ DateTimeInput.propTypes = {
   startMode: PropTypes.oneOf([
     'year', 'month', 'day',
   ]),
+  /** Date and time divider. */
+  divider: PropTypes.string,
 };
 
 DateTimeInput.defaultProps = {
   dateFormat: 'YYYY-MM-DD',
   timeFormat: '24',
   startMode: 'day',
+  divider: ' ',
 };
 
 export default DateTimeInput;

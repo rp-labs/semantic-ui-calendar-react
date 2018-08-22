@@ -15,6 +15,7 @@ function InputView(props) {
     value,
     closeOnMouseLeave,
     onChange,
+    inlineLabel,
   } = props;
   const rest = getUnhandledProps(InputView, props);
   
@@ -22,6 +23,7 @@ function InputView(props) {
     <Form.Input
       { ...rest }
       value={value}
+      inline={inlineLabel}
       onChange={onChange} />
   );
 
@@ -53,6 +55,8 @@ InputView.propTypes = {
   onChange: PropTypes.func,
   /** Picker. */
   children: PropTypes.node,
+  /** A field can have its label next to instead of above it. */
+  inlineLabel: PropTypes.bool,
 };
 
 InputView.defaultProps = {
