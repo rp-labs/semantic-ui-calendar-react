@@ -49,7 +49,6 @@ class DateTimeForm extends React.Component {
       <Form>
         <DateInput
           placeholder="Date"
-          closable
           className="example-calendar-input"
           name="date"
           value={this.state.date}

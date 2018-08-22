@@ -6,9 +6,9 @@ import _ from 'lodash';
 import InputView from '../views/InputView';
 import HourPicker from '../pickers/timePicker/HourPicker';
 import MinutePicker from '../pickers/timePicker/MinutePicker';
+import BaseInput from './BaseInput';
 import {
   parseValue,
-  parseArrayOrValue,
   getInitializer,
   TIME_FORMAT,
 } from './parse';
@@ -19,12 +19,7 @@ function getNextMode(currentMode) {
   return 'hour';
 }
 
-function getPrevMode(currentMode) {
-  if (currentMode === 'minute') return 'hour';
-  return 'minute';
-}
-
-class TimeInput extends React.Component {
+class TimeInput extends BaseInput {
   /**
    * Component responsibility:
    *  - parse time input string
@@ -55,6 +50,9 @@ class TimeInput extends React.Component {
     }
     _.invoke(this.props, 'onChange', e, { ...this.props, value: outputTimeString });
     this.setState((prevState) => {
+      if (this.props.closable && prevState.mode === 'minute') {
+        this.closePopup();
+      }
       return { mode: getNextMode(prevState.mode) };
     });
   }
@@ -102,6 +100,8 @@ TimeInput.propTypes = {
   timeFormat: PropTypes.oneOf([
     '24', 'AMPM', 'ampm',
   ]),
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 TimeInput.defaultProps = {

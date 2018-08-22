@@ -9,6 +9,7 @@ import MonthPicker from '../pickers/MonthPicker';
 import DayPicker from '../pickers/dayPicker/DayPicker';
 import HourPicker from '../pickers/timePicker/HourPicker';
 import MinutePicker from '../pickers/timePicker/MinutePicker';
+import BaseInput from './BaseInput';
 import {
   parseValue,
   parseArrayOrValue,
@@ -33,7 +34,7 @@ function getPrevMode(currentMode) {
   return 'minute';
 }
 
-class DateTimeInput extends React.Component {
+class DateTimeInput extends BaseInput {
   constructor(props) {
     super(props);
     /*
@@ -141,6 +142,9 @@ class DateTimeInput extends React.Component {
         const outValue = moment(value).format(`${this.props.dateFormat}${this.props.divider}${timeFormatStr}`);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
+      if (this.props.closable && mode === 'minute') {
+        this.closePopup();
+      }
       return { mode: nextMode, ...value };
     });
   }
@@ -201,6 +205,8 @@ DateTimeInput.propTypes = {
   ]),
   /** Date and time divider. */
   divider: PropTypes.string,
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 DateTimeInput.defaultProps = {

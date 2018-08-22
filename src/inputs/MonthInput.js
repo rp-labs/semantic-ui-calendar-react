@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import InputView from '../views/InputView';
 import MonthPicker from '../pickers/MonthPicker';
+import BaseInput from './BaseInput';
 import {
   parseValue,
   parseArrayOrValue,
@@ -12,7 +13,7 @@ import {
 } from './parse';
 import { getUnhandledProps } from '../lib';
 
-class MonthInput extends React.Component {
+class MonthInput extends BaseInput {
 
   handleSelect = (e, { value }) => {
     const date = moment({ month: value.month });
@@ -24,6 +25,9 @@ class MonthInput extends React.Component {
       this.props,
       'onChange',
       e, { ...this.props, value: output });
+    if (this.props.closable) {
+      this.closePopup();
+    }
   }
 
   render() {
@@ -86,6 +90,8 @@ MonthInput.propTypes = {
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 MonthInput.defaultProps = {

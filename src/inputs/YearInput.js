@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 import InputView from '../views/InputView';
 import YearPicker from '../pickers/YearPicker';
+import BaseInput from './BaseInput';
 import {
   parseValue,
   parseArrayOrValue,
@@ -12,7 +13,7 @@ import {
 } from './parse';
 import { getUnhandledProps } from '../lib';
 
-class YearInput extends React.Component {
+class YearInput extends BaseInput {
 
   handleSelect = (e, { value }) => {
     const date = moment({ year: value.year });
@@ -24,6 +25,9 @@ class YearInput extends React.Component {
       this.props,
       'onChange',
       e, { ...this.props, value: output });
+    if (this.props.closable) {
+      this.closePopup();
+    }
   }
 
   render() {
@@ -85,6 +89,8 @@ YearInput.propTypes = {
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 YearInput.defaultProps = {

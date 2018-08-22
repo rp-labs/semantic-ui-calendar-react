@@ -9,6 +9,7 @@ import {
 } from './parse';
 import { getUnhandledProps } from '../lib';
 import DatesRangePicker from '../pickers/dayPicker/DatesRangePicker';
+import BaseInput from './BaseInput';
 
 const DATES_SEPARATOR = ' - ';
 
@@ -44,7 +45,7 @@ function parseDatesRange(inputString, dateFormat) {
   return result;
 }
 
-class DatesRangeInput extends React.Component {
+class DatesRangeInput extends BaseInput {
   /**
    * Component responsibility:
    *  - parse input value (start: Moment, end: Moment)
@@ -65,6 +66,9 @@ class DatesRangeInput extends React.Component {
       outputString = `${start.format(dateFormat)}${DATES_SEPARATOR}`;
     }
     _.invoke(this.props, 'onChange', e, { ...this.props, value: outputString });
+    if (this.props.closable && start && end) {
+      this.closePopup();
+    }
   }
 
   render() {
@@ -122,6 +126,8 @@ DatesRangeInput.propTypes = {
     PropTypes.instanceOf(moment),
     PropTypes.instanceOf(Date),
   ]),
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 DatesRangeInput.defaultProps = {

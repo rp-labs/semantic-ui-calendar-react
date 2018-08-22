@@ -61,7 +61,6 @@ InputView.propTypes = {
 
 InputView.defaultProps = {
   inline: false,
-  closable: false,
   closeOnMouseLeave: true
 };
 

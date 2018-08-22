@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import _ from 'lodash';
@@ -7,6 +8,7 @@ import InputView from '../views/InputView';
 import YearPicker from '../pickers/YearPicker';
 import MonthPicker from '../pickers/MonthPicker';
 import DayPicker from '../pickers/dayPicker/DayPicker';
+import BaseInput from './BaseInput';
 import {
   parseArrayOrValue,
   getInitializer,
@@ -26,7 +28,7 @@ function getPrevMode(currentMode) {
   return 'day';
 }
 
-class DateInput extends React.Component {
+class DateInput extends BaseInput {
   constructor(props) {
     super(props);
     /*
@@ -47,7 +49,7 @@ class DateInput extends React.Component {
     }
   }
 
-  getDateParams() {
+  getDateParams() { 
     /* 
       Return date params that are used for picker initialization.
       Return undefined if none of [ 'year', 'month', 'date' ]
@@ -110,13 +112,17 @@ class DateInput extends React.Component {
         mode,
       } = prevState;
       let nextMode = mode;
+      let popupOpen;
       if (mode !== 'day') {
         nextMode = getNextMode(mode);
       } else {
         const outValue = moment(value).format(this.props.dateFormat);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
+        if (this.props.closable) {
+          this.closePopup();
+        }
       }
-      return { mode: nextMode, ...value };
+      return { mode: nextMode, ...value, popupOpen };
     });
   }
 
@@ -129,6 +135,7 @@ class DateInput extends React.Component {
       <InputView
         icon="calendar"
         { ...rest }
+        popupOpen={this.state.popupOpen}
         value={value}>
         { this.getPicker() }
       </InputView>
@@ -172,6 +179,8 @@ DateInput.propTypes = {
   startMode: PropTypes.oneOf([
     'year', 'month', 'day',
   ]),
+  /** If true, popup closes after selecting a date-time. */
+  closable: PropTypes.bool,
 };
 
 DateInput.defaultProps = {
