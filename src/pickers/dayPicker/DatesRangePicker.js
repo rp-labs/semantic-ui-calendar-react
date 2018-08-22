@@ -81,11 +81,6 @@ function buildMoment(date/*Moment*/, firstOnPage/*number*/, dateToBuildPosition/
 }
 
 class DatesRangePicker extends React.Component {
-  /*
-    Note:
-      use it like this <DatesRangePicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
   constructor(props) {
     super(props);
     this.state = {
@@ -124,7 +119,7 @@ class DatesRangePicker extends React.Component {
     prevMonth.subtract(1, 'month');
     const nextMonth = date.clone();
     nextMonth.add(1, 'month');
-    
+
     if (start && end) {
       const startPosition = getDatePosition(
         prevMonth,

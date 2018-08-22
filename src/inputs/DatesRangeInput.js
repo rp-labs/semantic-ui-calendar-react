@@ -97,7 +97,6 @@ class DatesRangeInput extends BaseInput {
         { ...rest }
         value={value}>
         <DatesRangePicker
-          key={value}
           onChange={this.handleSelect}
           dateFormat={dateFormat}
           initializeWith={getInitializer({ initialDate, dateFormat })}
