@@ -15,6 +15,7 @@ import YearInput from '../src/inputs/YearInput';
 import MonthInput from '../src/inputs/MonthInput';
 import DateInput from '../src/inputs/DateInput';
 import DateTimeInput from '../src/inputs/DateTimeInput';
+import DatesRangeInput from '../src/inputs/DatesRangeInput';
 
 moment.locale('en');
 
@@ -88,7 +89,7 @@ class DateTimeForm extends React.Component {
           iconPosition="left"
           onChange={this.handleChange} />
         <br />
-        {/* <DatesRangeInput
+        <DatesRangeInput
           dateFormat="DD.MM.YY"
           placeholder="From - To"
           className="example-calendar-input"
@@ -96,7 +97,7 @@ class DateTimeForm extends React.Component {
           value={this.state.datesRange}
           iconPosition="left"
           onChange={this.handleChange} />
-        <br /> */}
+        <br />
         <YearInput
           placeholder="Year"
           className="example-calendar-input"

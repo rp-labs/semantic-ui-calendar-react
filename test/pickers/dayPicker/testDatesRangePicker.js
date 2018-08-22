@@ -209,6 +209,136 @@ describe('<DatesRangePicker />: getActiveDaysPositions', () => {
     assert.equal(wrapper.instance().getActiveDaysPositions().start, 8, 'return { start: 8, ... }');
     assert.equal(wrapper.instance().getActiveDaysPositions().end, 14, 'return { end: 14, ... }');
   });
+
+  describe('`start` is in previous month and is not currently displayed, `end` is undefined', () => {
+    it('return empty range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-07-06')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().start), 'return { start: undefined, ... }');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
+    });
+  });
+
+  describe('`start` is in previous month and is currently displayed, `end` is undefined', () => {
+    it('return half-filled range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-07-30')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert.equal(wrapper.instance().getActiveDaysPositions().start, 1, 'return { start: 1, ... }');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
+    });
+  });
+
+  describe('`start` is in previous month and is not currently displayed, `end` is in current month', () => {
+    it('return full range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-07-06')}
+        end={moment('2018-08-04')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert.equal(wrapper.instance().getActiveDaysPositions().start, 0, 'return { start: 0, ... }');
+      assert.equal(wrapper.instance().getActiveDaysPositions().end, 6, 'return { end: 6, ... }');
+    });
+  });
+
+  describe('`start` is in previous month and is currently displayed, `end` is in current month', () => {
+    it('return full range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-07-30')}
+        end={moment('2018-08-04')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert.equal(wrapper.instance().getActiveDaysPositions().start, 1, 'return { start: 1, ... }');
+      assert.equal(wrapper.instance().getActiveDaysPositions().end, 6, 'return { end: 6, ... }');
+    });
+  });
+
+  describe('`start` is in current month, `end` is in next month and is not currently displayed', () => {
+    it('return full range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-08-30')}
+        end={moment('2018-09-20')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert.equal(wrapper.instance().getActiveDaysPositions().start, 32, 'return { start: 32, ... }');
+      assert.equal(wrapper.instance().getActiveDaysPositions().end, 41, 'return { end: 41, ... }');
+    });
+  });
+
+  describe('`start` is in current month, `end` is in next month and is currently displayed', () => {
+    it('return full range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-08-30')}
+        end={moment('2018-09-02')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert.equal(wrapper.instance().getActiveDaysPositions().start, 32, 'return { start: 32, ... }');
+      assert.equal(wrapper.instance().getActiveDaysPositions().end, 35, 'return { end: 35, ... }');
+    });
+  });
 });
 
 describe('<DatesRangePicker />: getDisabledDaysPositions', () => {
@@ -464,7 +594,7 @@ describe('<DatesRangePicker />: handleChange', () => {
       const wrapper = shallow(<DatesRangePicker
         onChange={onChangeFake}
         initializeWith={date} />);
-      wrapper.instance().handleChange('click', { key: '17', value: '15'});
+      wrapper.instance().handleChange('click', { itemPosition: 17});
       const calledWithArgs = onChangeFake.args[0];
   
       assert(onChangeFake.calledOnce, 'onChangeFake called once');
@@ -492,7 +622,7 @@ describe('<DatesRangePicker />: handleChange', () => {
         onChange={onChangeFake}
         start={moment('2018-08-09')}
         initializeWith={date} />);
-      wrapper.instance().handleChange('click', { key: '17', value: '15'});
+      wrapper.instance().handleChange('click', { itemPosition: 17 });
       const calledWithArgs = onChangeFake.args[0];
   
       assert(onChangeFake.calledOnce, 'onChangeFake called once');
@@ -526,7 +656,7 @@ describe('<DatesRangePicker />: handleChange', () => {
         start={moment('2018-08-09')}
         end={moment('2018-08-10')}
         initializeWith={date} />);
-      wrapper.instance().handleChange('click', { key: '17', value: '15'});
+      wrapper.instance().handleChange('click', { itemPosition: 17 });
       const calledWithArgs = onChangeFake.args[0];
   
       assert(onChangeFake.calledOnce, 'onChangeFake called once');
@@ -553,7 +683,7 @@ describe('<DatesRangePicker />: handleChange', () => {
         onChange={onChangeFake}
         start={moment('2018-08-09')}
         initializeWith={date} />);
-      wrapper.instance().handleChange('click', { key: '9', value: '7'});
+      wrapper.instance().handleChange('click', { itemPosition: 9 });
       const calledWithArgs = onChangeFake.args[0];
   
       assert(onChangeFake.calledOnce, 'onChangeFake called once');

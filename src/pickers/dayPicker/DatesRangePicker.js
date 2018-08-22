@@ -14,18 +14,18 @@ import {
   isPrevPageAvailable,
 } from './sharedFunctions';
 
-function getDaysFromPrevMonth(date, allDays, currentMonthStartPosition) {
+function getDatesFromPrevMonth(date, allDays, currentMonthStartPosition) {
   if (currentMonthStartPosition === 0) {
     return [];
   }
-  return allDays.slice(0, currentMonthStartPosition);
+  return allDays.slice(0, currentMonthStartPosition).map(date => parseInt(date));
 }
 
-function getDaysFromNextMonth(date, allDays, currentMonthEndPosition) {
-  if (currentMonthEndPosition === allDays.length) {
+function getDatesFromNextMonth(date, allDays, nextMonthStartPosition) {
+  if (nextMonthStartPosition === allDays.length) {
     return [];
   }
-  return allDays.slice(currentMonthEndPosition, allDays.length);
+  return allDays.slice(nextMonthStartPosition, allDays.length).map(date => parseInt(date));
 }
 
 /** Build moment based on current page and date position on that page. */
@@ -77,32 +77,60 @@ class DatesRangePicker extends React.Component {
     const allDays = this.buildDays();
     const fromCurrentMonthDayPositions = getDefaultEnabledDayPositions(allDays, date);
 
-    const fromPrev = getDaysFromPrevMonth(date, allDays, fromCurrentMonthDayPositions[0]);
-    const fromNext = getDaysFromNextMonth(date, allDays, _.last(fromCurrentMonthDayPositions) + 1);
-    const fromCurrentMonth = _.range(1, this.state.date.daysInMonth() + 1);
+    const fromPrevMonthDates = getDatesFromPrevMonth(date, allDays, fromCurrentMonthDayPositions[0]);
+    const fromNextMonthDates = getDatesFromNextMonth(date, allDays, _.last(fromCurrentMonthDayPositions) + 1);
+    const fromCurrentMonthDates = _.range(1, this.state.date.daysInMonth() + 1);
 
     let startPosition;
     let endPosition;
 
-    if (start && start.isBefore(date, 'month')) {
-      startPosition = fromPrev.indexOf(start.date());
-      if (startPosition < 0) {
-        startPosition = 0; // first day on the page
+    const prevMonth = date.clone();
+    prevMonth.subtract(1, 'month');
+    if (start && end) {
+      if (start.isSame(prevMonth, 'month')) {
+        startPosition = fromPrevMonthDates.indexOf(start.date());
+        if (startPosition < 0) {
+          startPosition = 0; // first day on the page
+        }
       }
-    } else if (start && start.isSame(date, 'month')) {
-      startPosition = fromCurrentMonth.indexOf(start.date()) + fromCurrentMonthDayPositions[0];
-    }
-    if (end && end.isSame(date, 'month')) {
-      endPosition = fromCurrentMonth.indexOf(end.date()) + fromCurrentMonthDayPositions[0];
-    } else if (end && end.isAfter(date, 'month')) {
-      const _endPosition = fromNext.indexOf(end.date());
-      if (_endPosition < 0) {
-        endPosition = DAYS_ON_PAGE - 1; // last day on the page
-      } else {
-        endPosition = _endPosition + _.last(fromCurrentMonthDayPositions) + 1;
+      if (start.isBefore(prevMonth, 'month')) {
+        startPosition = 0;
+      }
+      if (start.isSame(date, 'month')) {
+        startPosition = fromCurrentMonthDates.indexOf(start.date()) + fromPrevMonthDates.length;
+      }
+
+      const nextMonth = date.clone();
+      nextMonth.add(1, 'month');
+      if (end.isSame(nextMonth, 'month')) {
+        endPosition = fromNextMonthDates.indexOf(end.date());
+        if (endPosition < 0) {
+          endPosition = DAYS_ON_PAGE - 1;
+        } else {
+          endPosition += fromPrevMonthDates.length + fromCurrentMonthDates.length;
+        }
+      }
+      if (end.isAfter(nextMonth, 'month')) {
+        endPosition = DAYS_ON_PAGE - 1;
+      }
+      if (end.isSame(date, 'month')) {
+        endPosition = fromCurrentMonthDates.indexOf(end.date()) + fromPrevMonthDates.length;
+      }
+    } else if (start) {
+      if (start.isSame(prevMonth, 'month')) {
+        startPosition = fromPrevMonthDates.indexOf(start.date());
+        if (startPosition < 0) {
+          startPosition = undefined;
+        }
+      }
+      if (start.isSame(date, 'month')) {
+        startPosition = fromCurrentMonthDates.indexOf(start.date()) + fromPrevMonthDates.length;
       }
     }
-    return { start: startPosition, end: endPosition };
+    return {
+      start: startPosition,
+      end: endPosition,
+    };
   }
 
   getDisabledDaysPositions() {
@@ -130,7 +158,7 @@ class DatesRangePicker extends React.Component {
     return this.state.date.format('MMMM YYYY');
   }
 
-  handleChange = (e, { key }) => {
+  handleChange = (e, { itemPosition }) => {
     // call `onChange` with value: { start: moment, end: moment }
     const {
       start,
@@ -139,11 +167,11 @@ class DatesRangePicker extends React.Component {
     const firstOnPage = parseInt(this.buildDays()[0]);
     if (_.isNil(start) && _.isNil(end)) {
       const range = {
-        start: buildMoment(this.state.date, firstOnPage, parseInt(key)),
+        start: buildMoment(this.state.date, firstOnPage, itemPosition),
       };
       _.invoke(this.props, 'onChange', e, { ...this.props, value: range });
     } else if (!_.isNil(start) && _.isNil(end)) {
-      const selectedDate = buildMoment(this.state.date, firstOnPage, parseInt(key));
+      const selectedDate = buildMoment(this.state.date, firstOnPage, itemPosition);
       if (selectedDate.isAfter(start, 'date')) {
         const range = {
           start,

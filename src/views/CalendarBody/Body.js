@@ -74,6 +74,7 @@ function Body(props) {
           active={isActive(rowIndex, parseInt(width), itemIndex, active)}
           disabled={isDisabled(rowIndex, parseInt(width), itemIndex, disabled)}
           key={`${rowIndex * width + itemIndex}`}
+          itemPosition={rowIndex * width + itemIndex}
           content={item}
           onClick={onCellClick} />
       )) }
