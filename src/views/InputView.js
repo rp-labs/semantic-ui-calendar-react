@@ -50,7 +50,7 @@ InputView.propTypes = {
   /** Wheter to close a popup when cursor leaves it. */
   closeOnMouseLeave: PropTypes.bool,
   /** Called after input field value has changed. */
-  onChange: PropTypes.bool,
+  onChange: PropTypes.func,
   /** Picker. */
   children: PropTypes.node,
 };

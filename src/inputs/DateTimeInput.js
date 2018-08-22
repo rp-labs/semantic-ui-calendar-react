@@ -88,6 +88,7 @@ class DateTimeInput extends React.Component {
     } = this.props;
     const dateTimeFormat = `${dateFormat} ${TIME_FORMAT[timeFormat]}`;
     const pickerProps = {
+      displayWeeks: true,
       hasHeader: true,
       onChange: this.handleSelect,
       onHeaderClick: this.switchToPrevMode,
@@ -96,21 +97,22 @@ class DateTimeInput extends React.Component {
       disable: parseArrayOrValue(disable),
       minDate: parseArrayOrValue(minDate),
       maxDate: parseArrayOrValue(maxDate),
+      key: value,
     };
     const { mode } = this.state;
     if (mode === 'year') {
-      return <YearPicker key={ value } { ...pickerProps } />;
+      return <YearPicker { ...pickerProps } />;
     }
     if (mode === 'month') {
-      return <MonthPicker key={ value } { ...pickerProps } />;
+      return <MonthPicker { ...pickerProps } />;
     }
     if (mode === 'day') {
-      return <DayPicker key={ value } { ...pickerProps } />;
+      return <DayPicker { ...pickerProps } />;
     }
     if (mode === 'hour') {
-      return <HourPicker key={ value } timeFormat={ this.props.timeFormat } { ...pickerProps } />;
+      return <HourPicker timeFormat={ this.props.timeFormat } { ...pickerProps } />;
     }
-    return <MinutePicker key={ value } timeFormat={ this.props.timeFormat } { ...pickerProps } />;
+    return <MinutePicker timeFormat={ this.props.timeFormat } { ...pickerProps } />;
   }
 
   switchToNextMode = () => {

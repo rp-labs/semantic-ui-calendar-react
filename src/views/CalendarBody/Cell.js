@@ -48,6 +48,8 @@ class Cell extends React.Component {
 }
 
 Cell.propTypes = {
+  /** Position of a cell on the page. */
+  itemPosition: PropTypes.number.isRequired,
   /** Cell's content. */
   content: PropTypes.oneOfType(
     [

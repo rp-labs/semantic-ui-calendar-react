@@ -42,6 +42,7 @@ class MonthInput extends React.Component {
         { ...rest }
         value={value}>
         <MonthPicker
+          hasHeader={false}
           onChange={this.handleSelect}
           initializeWith={getInitializer({ initialDate, dateFormat })}
           value={parseValue(value, dateFormat)}

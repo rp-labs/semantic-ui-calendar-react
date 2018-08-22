@@ -28,6 +28,7 @@ function MinuteView(props) {
     hasPrevPage,
     title: currentDate,
     width: MINUTE_CALENDAR_ROW_WIDTH,
+    displayWeeks: false,
   };
   return (
     <Calendar>

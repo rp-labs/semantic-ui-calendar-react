@@ -30,6 +30,7 @@ function HourView(props) {
     onHeaderClick,
     title: currentDate,
     width: HOUR_CALENDAR_ROW_WIDTH,
+    displayWeeks: false,
   };
   return (
     <Calendar>
@@ -66,7 +67,7 @@ HourView.propTypes = {
   /** Hour index to display as active. */
   active: PropTypes.number,
   /** Date that is displayed in calendar header. */
-  currentDate: PropTypes.instanceOf(moment),
+  currentDate: PropTypes.string,
 };
 
 export default HourView;
