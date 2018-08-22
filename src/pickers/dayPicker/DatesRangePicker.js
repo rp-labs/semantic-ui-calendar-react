@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 import _ from 'lodash';
 
 import DatesRangeView from '../../views/DatesRangeView';
@@ -13,6 +13,45 @@ import {
   isNextPageAvailable,
   isPrevPageAvailable,
 } from './sharedFunctions';
+
+/** Return position of a given date on the page.
+ * 
+ * Page consists of some dates from previous month, dates from current month
+ * and some dates from next month.
+ * Return undefined if date that is under test is out of page.
+ * 
+ * @param {Moment} prevMonth 
+ * @param {Moment} currentMonth 
+ * @param {Moment} nextMonth 
+ * @param {Moment} date Date to test
+ * @param {number[]} fromPrevMonthDates 
+ * @param {number[]} fromCurrentMonthDates 
+ * @param {number[]} fromNextMonthDates 
+ */
+function getDatePosition(
+  prevMonth,
+  currentMonth,
+  nextMonth,
+  date,
+  fromPrevMonthDates,
+  fromCurrentMonthDates,
+  fromNextMonthDates) {
+  if (date.isSame(prevMonth, 'month')) {
+    const position = fromPrevMonthDates.indexOf(date.date());
+    if (position >= 0) {
+      return position;
+    }
+  }
+  if (date.isSame(currentMonth, 'month')) {
+    return fromCurrentMonthDates.indexOf(date.date()) + fromPrevMonthDates.length;
+  }
+  if (date.isSame(nextMonth, 'month')) {
+    const position = fromNextMonthDates.indexOf(date.date());
+    if (position >= 0) {
+      return position + fromPrevMonthDates.length + fromCurrentMonthDates.length;
+    }
+  }
+}
 
 function getDatesFromPrevMonth(date, allDays, currentMonthStartPosition) {
   if (currentMonthStartPosition === 0) {
@@ -81,68 +120,51 @@ class DatesRangePicker extends React.Component {
     const fromNextMonthDates = getDatesFromNextMonth(date, allDays, _.last(fromCurrentMonthDayPositions) + 1);
     const fromCurrentMonthDates = _.range(1, this.state.date.daysInMonth() + 1);
 
-    let startPosition;
-    let endPosition;
-
     const prevMonth = date.clone();
     prevMonth.subtract(1, 'month');
     const nextMonth = date.clone();
     nextMonth.add(1, 'month');
+    
     if (start && end) {
-      if (start.isSame(prevMonth, 'month')) {
-        startPosition = fromPrevMonthDates.indexOf(start.date());
-        if (startPosition < 0) {
-          startPosition = 0; // first day on the page
-        }
-      }
-      if (start.isBefore(prevMonth, 'month')) {
-        startPosition = 0;
-      }
-      if (start.isSame(date, 'month')) {
-        startPosition = fromCurrentMonthDates.indexOf(start.date()) + fromPrevMonthDates.length;
-      }
-      if (start.isSame(nextMonth, 'month')) {
-        startPosition = fromNextMonthDates.indexOf(start.date());
-        if (startPosition < 0) {
-          startPosition = undefined;
-        }
-      }
+      const startPosition = getDatePosition(
+        prevMonth,
+        this.state.date,
+        nextMonth,
+        start,
+        fromPrevMonthDates,
+        fromCurrentMonthDates,
+        fromNextMonthDates);
 
-      if (end.isSame(nextMonth, 'month')) {
-        endPosition = fromNextMonthDates.indexOf(end.date());
-        if (endPosition < 0) {
-          endPosition = DAYS_ON_PAGE - 1;
-        } else {
-          endPosition += fromPrevMonthDates.length + fromCurrentMonthDates.length;
-        }
+      const endPosition = getDatePosition(
+        prevMonth,
+        this.state.date,
+        nextMonth,
+        end,
+        fromPrevMonthDates,
+        fromCurrentMonthDates,
+        fromNextMonthDates);
+      if (startPosition && endPosition) {
+        return { start: startPosition, end: endPosition };
       }
-      if (end.isAfter(nextMonth, 'month')) {
-        endPosition = DAYS_ON_PAGE - 1;
+      if (startPosition) {
+        return { start: startPosition, end: DAYS_ON_PAGE - 1};
       }
-      if (end.isSame(date, 'month')) {
-        endPosition = fromCurrentMonthDates.indexOf(end.date()) + fromPrevMonthDates.length;
-      }
-      if (end.isSame(prevMonth, 'month')) {
-        endPosition = fromPrevMonthDates.indexOf(end.date());
-        if (endPosition < 0) {
-          endPosition = undefined;
-        }
-      }
-    } else if (start) {
-      if (start.isSame(prevMonth, 'month')) {
-        startPosition = fromPrevMonthDates.indexOf(start.date());
-        if (startPosition < 0) {
-          startPosition = undefined;
-        }
-      }
-      if (start.isSame(date, 'month')) {
-        startPosition = fromCurrentMonthDates.indexOf(start.date()) + fromPrevMonthDates.length;
+      if (endPosition) {
+        return { start: 0, end: endPosition};
       }
     }
-    return {
-      start: startPosition,
-      end: endPosition,
-    };
+    if (start) {
+      const startPosition = getDatePosition(
+        prevMonth,
+        this.state.date,
+        nextMonth,
+        start,
+        fromPrevMonthDates,
+        fromCurrentMonthDates,
+        fromNextMonthDates);
+      return { start: startPosition, end: undefined };
+    }
+    return { start: undefined, end: undefined };
   }
 
   getDisabledDaysPositions() {
