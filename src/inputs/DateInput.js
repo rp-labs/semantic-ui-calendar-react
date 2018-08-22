@@ -112,7 +112,6 @@ class DateInput extends BaseInput {
         mode,
       } = prevState;
       let nextMode = mode;
-      let popupOpen;
       if (mode !== 'day') {
         nextMode = getNextMode(mode);
       } else {
@@ -122,7 +121,7 @@ class DateInput extends BaseInput {
           this.closePopup();
         }
       }
-      return { mode: nextMode, ...value, popupOpen };
+      return { mode: nextMode, ...value };
     });
   }
 
@@ -135,7 +134,6 @@ class DateInput extends BaseInput {
       <InputView
         icon="calendar"
         { ...rest }
-        popupOpen={this.state.popupOpen}
         value={value}>
         { this.getPicker() }
       </InputView>
