@@ -97,6 +97,7 @@ class DatesRangePicker extends React.Component {
     return buildDays(this.state.date, DAYS_ON_PAGE);
   }
 
+  // TODO: too complicated method
   getActiveDaysPositions() {
     /*
       Return starting and ending positions of dates range that should be displayed as active
@@ -146,6 +147,9 @@ class DatesRangePicker extends React.Component {
       }
       if (endPosition) {
         return { start: 0, end: endPosition};
+      }
+      if (this.state.date.isBetween(start, end)) {
+        return { start: 0, end: DAYS_ON_PAGE - 1};
       }
     }
     if (start) {
