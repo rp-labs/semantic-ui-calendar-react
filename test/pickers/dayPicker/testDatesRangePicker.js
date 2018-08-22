@@ -42,6 +42,7 @@ describe('<DatesRangePicker />', () => {
     assert(_.isBoolean(wrapper.prop('hasPrevPage')), 'provide boolean for `hasPrevPage` prop on DatesRangeView');
     assert(_.isBoolean(wrapper.prop('hasNextPage')), 'provide boolean for `hasNextPage` prop on DatesRangeView');
     assert(_.isString(wrapper.prop('currentDate')), 'provide string for `currentDate` prop on DatesRangeView');
+    assert(_.isString(wrapper.prop('selectedRange')), 'provide string for `selectedRange` prop on DatesRangeView');
     assert(_.isObject(wrapper.prop('active')), 'provide object for `active` prop on DatesRangeView');
     assert(_.has(wrapper.prop('active'), 'start'), 'provide `active` prop with `start` field to DatesRangeView');
     assert(_.has(wrapper.prop('active'), 'end'), 'provide `active` prop with `end` field to DatesRangeView');

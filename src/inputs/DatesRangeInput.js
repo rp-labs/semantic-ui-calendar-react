@@ -88,6 +88,7 @@ class DatesRangeInput extends React.Component {
         <DatesRangePicker
           key={value}
           onChange={this.handleSelect}
+          dateFormat={dateFormat}
           initializeWith={getInitializer({ initialDate, dateFormat })}
           start={start}
           end={end}

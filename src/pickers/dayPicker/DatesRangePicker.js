@@ -158,6 +158,16 @@ class DatesRangePicker extends React.Component {
     return this.state.date.format('MMMM YYYY');
   }
 
+  getSelectedRange() {
+    /* Return currently selected dates range(string) to display in calendar header. */
+    const {
+      start,
+      end,
+      dateFormat,
+    } = this.props;
+    return `${start? start.format(dateFormat) : '- - -'} - ${end? end.format(dateFormat) : '- - -'}`;
+  }
+
   handleChange = (e, { itemPosition }) => {
     // call `onChange` with value: { start: moment, end: moment }
     const {
@@ -214,6 +224,7 @@ class DatesRangePicker extends React.Component {
         hasPrevPage={this.isPrevPageAvailable()}
         hasNextPage={this.isNextPageAvailable()}
         currentDate={this.getCurrentDate()}
+        selectedRange={this.getSelectedRange()}
         active={this.getActiveDaysPositions()}
         disabled={this.getDisabledDaysPositions()} />
     );
@@ -225,6 +236,8 @@ DatesRangePicker.propTypes = {
   onChange: PropTypes.func.isRequired,
   /** A value for initializing day picker's state. */
   initializeWith: PropTypes.instanceOf(moment).isRequired,
+  /** Moment date formatting string. */
+  dateFormat: PropTypes.string.isRequired,
   /** Start of currently selected dates range. */
   start: PropTypes.instanceOf(moment),
   /** End of currently selected dates range. */
