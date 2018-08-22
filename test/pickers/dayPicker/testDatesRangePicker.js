@@ -340,6 +340,50 @@ describe('<DatesRangePicker />: getActiveDaysPositions', () => {
       assert.equal(wrapper.instance().getActiveDaysPositions().end, 35, 'return { end: 35, ... }');
     });
   });
+
+  describe('`start` is in previous month, `end` is in previous month and is not currently displayed', () => {
+    it('return empty range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-07-02')}
+        end={moment('2018-07-10')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().start), 'return { start: undefined, ... }');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
+    });
+  });
+
+  describe('`start` is in next month, `end` is in next month and is not currently displayed', () => {
+    it('return empty range', () => {
+      const wrapper = shallow(<DatesRangePicker
+        start={moment('2018-09-10')}
+        end={moment('2018-09-15')}
+        initializeWith={date} />);
+      /*
+        [
+        '29', '30', '31', '1', '2', '3', '4',
+        '5', '6', '7', '8', '9', '10', '11',
+        '12', '13', '14', '15', '16', '17', '18',
+        '19', '20', '21', '22', '23', '24', '25',
+        '26', '27', '28', '29', '30', '31', '1',
+        '2', '3', '4', '5', '6', '7', '8',
+      ]
+      */
+      assert(_.isObject(wrapper.instance().getActiveDaysPositions()), 'return object');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().start), 'return { start: undefined, ... }');
+      assert(_.isUndefined(wrapper.instance().getActiveDaysPositions().end), 'return { end: undefined, ... }');
+    });
+  });
 });
 
 describe('<DatesRangePicker />: getDisabledDaysPositions', () => {

@@ -86,6 +86,8 @@ class DatesRangePicker extends React.Component {
 
     const prevMonth = date.clone();
     prevMonth.subtract(1, 'month');
+    const nextMonth = date.clone();
+    nextMonth.add(1, 'month');
     if (start && end) {
       if (start.isSame(prevMonth, 'month')) {
         startPosition = fromPrevMonthDates.indexOf(start.date());
@@ -99,9 +101,13 @@ class DatesRangePicker extends React.Component {
       if (start.isSame(date, 'month')) {
         startPosition = fromCurrentMonthDates.indexOf(start.date()) + fromPrevMonthDates.length;
       }
+      if (start.isSame(nextMonth, 'month')) {
+        startPosition = fromNextMonthDates.indexOf(start.date());
+        if (startPosition < 0) {
+          startPosition = undefined;
+        }
+      }
 
-      const nextMonth = date.clone();
-      nextMonth.add(1, 'month');
       if (end.isSame(nextMonth, 'month')) {
         endPosition = fromNextMonthDates.indexOf(end.date());
         if (endPosition < 0) {
@@ -115,6 +121,12 @@ class DatesRangePicker extends React.Component {
       }
       if (end.isSame(date, 'month')) {
         endPosition = fromCurrentMonthDates.indexOf(end.date()) + fromPrevMonthDates.length;
+      }
+      if (end.isSame(prevMonth, 'month')) {
+        endPosition = fromPrevMonthDates.indexOf(end.date());
+        if (endPosition < 0) {
+          endPosition = undefined;
+        }
       }
     } else if (start) {
       if (start.isSame(prevMonth, 'month')) {
