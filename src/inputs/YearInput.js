@@ -15,6 +15,11 @@ import { getUnhandledProps } from '../lib';
 
 class YearInput extends BaseInput {
 
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   handleSelect = (e, { value }) => {
     const date = moment({ year: value.year });
     let output = '';
@@ -42,6 +47,8 @@ class YearInput extends BaseInput {
     const rest = getUnhandledProps(YearInput, this.props);
     return (
       <InputView
+        popupIsClosed={this.state.popupIsClosed}
+        onPopupUnmount={this.onPopupClose}
         icon="calendar"
         { ...rest }
         value={value}>

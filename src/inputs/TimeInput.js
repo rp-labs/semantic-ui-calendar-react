@@ -49,10 +49,10 @@ class TimeInput extends BaseInput {
       outputTimeString = moment({ hour, minute }).format(TIME_FORMAT[timeFormat]);
     }
     _.invoke(this.props, 'onChange', e, { ...this.props, value: outputTimeString });
+    if (this.props.closable && this.state.mode === 'minute') {
+      this.closePopup();
+    }
     this.setState((prevState) => {
-      if (this.props.closable && prevState.mode === 'minute') {
-        this.closePopup();
-      }
       return { mode: getNextMode(prevState.mode) };
     });
   }
@@ -84,6 +84,8 @@ class TimeInput extends BaseInput {
     const rest = getUnhandledProps(TimeInput, this.props);
     return (
       <InputView
+        popupIsClosed={this.state.popupIsClosed}
+        onPopupUnmount={this.onPopupClose}
         icon="time"
         { ...rest }
         value={value}>

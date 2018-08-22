@@ -3,7 +3,6 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {
   shallow,
-  mount,
 } from 'enzyme';
 import sinon from 'sinon';
 import React from 'react';
@@ -16,7 +15,7 @@ import YearInput from '../../src/inputs/YearInput';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe.skip('<YearInput />', () => {
+describe('<YearInput />', () => {
   it('render <YearInput /> properly', () => {
     const wrapper = shallow(<YearInput />);
     const child = wrapper.children();
@@ -46,7 +45,7 @@ describe.skip('<YearInput />', () => {
 describe('<YearInput />: handleSelect', () => {
   it('call `onChange`', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<YearInput
+    const wrapper = shallow(<YearInput
       onChange={onChangeFake} />);
 
     wrapper.instance().handleSelect('click', { value: { year: 2030 } });

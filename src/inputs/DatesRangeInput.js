@@ -52,6 +52,11 @@ class DatesRangeInput extends BaseInput {
    *  - handle DayPicker change (format {start: Moment, end: Moment} into
    *    string 'start - end')
    */
+
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   
   handleSelect = (e, { value }) => {
     const { dateFormat } = this.props;
@@ -86,6 +91,8 @@ class DatesRangeInput extends BaseInput {
     } = parseDatesRange(value, dateFormat);
     return (
       <InputView
+        popupIsClosed={this.state.popupIsClosed}
+        onPopupUnmount={this.onPopupClose}
         icon="calendar"
         { ...rest }
         value={value}>

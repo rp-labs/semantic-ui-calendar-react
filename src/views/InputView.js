@@ -16,6 +16,8 @@ function InputView(props) {
     closeOnMouseLeave,
     onChange,
     inlineLabel,
+    popupIsClosed,
+    onPopupUnmount,
   } = props;
   const rest = getUnhandledProps(InputView, props);
   
@@ -31,9 +33,11 @@ function InputView(props) {
   return (
     <Popup
       position={popupPosition}
+      open={popupIsClosed? false : undefined}
       trigger={inputElement}
       hoverable={closeOnMouseLeave}
       flowing
+      onUnmount={onPopupUnmount}
       style={popupStyle}
       hideOnScroll
       on="click">
@@ -49,7 +53,7 @@ InputView.propTypes = {
   popupPosition: PropTypes.string,
   /** Currently selected value. */
   value: PropTypes.string,
-  /** Wheter to close a popup when cursor leaves it. */
+  /** Whether to close a popup when cursor leaves it. */
   closeOnMouseLeave: PropTypes.bool,
   /** Called after input field value has changed. */
   onChange: PropTypes.func,
@@ -57,6 +61,10 @@ InputView.propTypes = {
   children: PropTypes.node,
   /** A field can have its label next to instead of above it. */
   inlineLabel: PropTypes.bool,
+  /** Whether popup is closed. */
+  popupIsClosed: PropTypes.bool,
+  /** Called when popup is forsed to close. */
+  onPopupUnmount: PropTypes.func,
 };
 
 InputView.defaultProps = {

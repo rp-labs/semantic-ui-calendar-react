@@ -3,7 +3,6 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {
   shallow,
-  mount,
 } from 'enzyme';
 import sinon from 'sinon';
 import React from 'react';
@@ -19,7 +18,7 @@ import DateInput from '../../src/inputs/DateInput';
 Enzyme.configure({ adapter: new Adapter() });
 
 describe('<DateInput />', () => {
-  it.skip('render <DateInput /> properly', () => {
+  it('render <DateInput /> properly', () => {
     const wrapper = shallow(<DateInput />);
     const child = wrapper.children();
 
@@ -36,7 +35,7 @@ describe('<DateInput />', () => {
   });
 
   it('pass unhandled props to <InputView />', () => {
-    const wrapper = mount(<DateInput
+    const wrapper = shallow(<DateInput
       a="prop a"
       b="prop b" />);
     assert(wrapper.render().is(InputView), 'renders <InputView />');
@@ -44,9 +43,9 @@ describe('<DateInput />', () => {
     assert.equal(wrapper.prop('b'), 'prop b', 'provide unhandled prop `b` to InputView');
   });
 
-  describe.skip('`startMode` year', () => {
+  describe('`startMode` year', () => {
     it('render <DateInput /> properly', () => {
-      const wrapper = mount(<DateInput startMode="year" />);
+      const wrapper = shallow(<DateInput startMode="year" />);
       const child = wrapper.children();
 
       assert(wrapper.is(InputView), 'renders <InputView />');
@@ -62,9 +61,9 @@ describe('<DateInput />', () => {
     });
   });
 
-  describe.skip('`startMode` month', () => {
+  describe('`startMode` month', () => {
     it('render <DateInput /> properly', () => {
-      const wrapper = mount(<DateInput startMode="month" />);
+      const wrapper = shallow(<DateInput startMode="month" />);
       const child = wrapper.children();
 
       assert(wrapper.is(InputView), 'renders <InputView />');
@@ -80,9 +79,9 @@ describe('<DateInput />', () => {
     });
   });
 
-  describe.skip('`startMode` day', () => {
+  describe('`startMode` day', () => {
     it('render <DateInput /> properly', () => {
-      const wrapper = mount(<DateInput startMode="day" />);
+      const wrapper = shallow(<DateInput startMode="day" />);
       const child = wrapper.children();
 
       assert(wrapper.is(InputView), 'renders <InputView />');
@@ -102,7 +101,7 @@ describe('<DateInput />', () => {
 describe('<DateInput />: handleSelect', () => {
   it('call `onChange` when in `day` mode (default)', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<DateInput
+    const wrapper = shallow(<DateInput
       dateFormat="YYYY-MM-DD"
       onChange={onChangeFake} />);
 
@@ -117,7 +116,7 @@ describe('<DateInput />: handleSelect', () => {
 
   it('switch to next mode if not in day mode', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<DateInput
+    const wrapper = shallow(<DateInput
       dateFormat="YYYY-MM-DD"
       startMode="year"
       onChange={onChangeFake} />);
@@ -129,7 +128,7 @@ describe('<DateInput />: handleSelect', () => {
 
   it('does not switch to next mode if in day mode', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<DateInput
+    const wrapper = shallow(<DateInput
       dateFormat="YYYY-MM-DD"
       startMode="day"
       onChange={onChangeFake} />);
@@ -141,7 +140,7 @@ describe('<DateInput />: handleSelect', () => {
 
   it('does not call `onChange` when not in `day` mode', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<DateInput
+    const wrapper = shallow(<DateInput
       dateFormat="YYYY-MM-DD"
       startMode="year"
       onChange={onChangeFake} />);
@@ -154,7 +153,7 @@ describe('<DateInput />: handleSelect', () => {
 
 describe('<DateInput />: switchToPrevMode', () => {
   it('switch to previous mode', () => {
-    const wrapper = mount(<DateInput />);
+    const wrapper = shallow(<DateInput />);
 
     assert.equal(wrapper.state('mode'), 'day', 'mode is not changed yet');
     wrapper.instance().switchToPrevMode();
@@ -164,7 +163,7 @@ describe('<DateInput />: switchToPrevMode', () => {
 
 describe('<DateInput />: switchToNextMode', () => {
   it('switch to next mode', () => {
-    const wrapper = mount(<DateInput />);
+    const wrapper = shallow(<DateInput />);
 
     assert.equal(wrapper.state('mode'), 'day', 'mode is not changed yet');
     wrapper.instance().switchToNextMode();

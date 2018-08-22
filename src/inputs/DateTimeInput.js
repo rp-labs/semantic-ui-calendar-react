@@ -130,6 +130,9 @@ class DateTimeInput extends BaseInput {
   }
 
   handleSelect = (e, { value }) => {
+    if (this.props.closable && this.state.mode === 'minute') {
+      this.closePopup();
+    }
     this.setState(( prevState ) => {
       const {
         mode,
@@ -142,9 +145,6 @@ class DateTimeInput extends BaseInput {
         const outValue = moment(value).format(`${this.props.dateFormat}${this.props.divider}${timeFormatStr}`);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
       }
-      if (this.props.closable && mode === 'minute') {
-        this.closePopup();
-      }
       return { mode: nextMode, ...value };
     });
   }
@@ -156,6 +156,8 @@ class DateTimeInput extends BaseInput {
     const rest = getUnhandledProps(DateTimeInput, this.props);
     return (
       <InputView
+        popupIsClosed={this.state.popupIsClosed}
+        onPopupUnmount={this.onPopupClose}
         icon="calendar"
         { ...rest }
         value={value}>

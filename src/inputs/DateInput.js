@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import _ from 'lodash';
@@ -107,6 +106,9 @@ class DateInput extends BaseInput {
   }
 
   handleSelect = (e, { value }) => {
+    if (this.state.mode === 'day' && this.props.closable) {
+      this.closePopup();
+    }
     this.setState(( prevState ) => {
       const {
         mode,
@@ -117,9 +119,6 @@ class DateInput extends BaseInput {
       } else {
         const outValue = moment(value).format(this.props.dateFormat);
         _.invoke(this.props, 'onChange', e, { ...this.props, value: outValue });
-        if (this.props.closable) {
-          this.closePopup();
-        }
       }
       return { mode: nextMode, ...value };
     });
@@ -132,6 +131,8 @@ class DateInput extends BaseInput {
     const rest = getUnhandledProps(DateInput, this.props);
     return (
       <InputView
+        popupIsClosed={this.state.popupIsClosed}
+        onPopupUnmount={this.onPopupClose}
         icon="calendar"
         { ...rest }
         value={value}>

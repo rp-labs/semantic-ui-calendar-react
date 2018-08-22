@@ -3,7 +3,6 @@ import Enzyme from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import {
   shallow,
-  mount,
 } from 'enzyme';
 import sinon from 'sinon';
 import React from 'react';
@@ -16,9 +15,9 @@ import MonthInput from '../../src/inputs/MonthInput';
 
 Enzyme.configure({ adapter: new Adapter() });
 
-describe.skip('<MonthInput />', () => {
+describe('<MonthInput />', () => {
   it('render <MonthInput /> properly', () => {
-    const wrapper = mount(<MonthInput />);
+    const wrapper = shallow(<MonthInput />);
     const child = wrapper.children();
 
     assert(wrapper.is(InputView), 'renders <InputView />');
@@ -34,7 +33,7 @@ describe.skip('<MonthInput />', () => {
   });
 
   it('pass unhandled props to <InputView />', () => {
-    const wrapper = mount(<MonthInput
+    const wrapper = shallow(<MonthInput
       a="prop a"
       b="prop b" />);
     assert(wrapper.is(InputView), 'renders <InputView />');
@@ -46,7 +45,7 @@ describe.skip('<MonthInput />', () => {
 describe('<MonthInput />: handleSelect', () => {
   it('call `onChange`', () => {
     const onChangeFake = sinon.fake();
-    const wrapper = mount(<MonthInput
+    const wrapper = shallow(<MonthInput
       onChange={onChangeFake} />);
 
     wrapper.instance().handleSelect('click', { value: { month: 5 } });
