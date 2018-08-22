@@ -82,15 +82,16 @@ class DateInput extends BaseInput {
       disable: parseArrayOrValue(disable),
       minDate: parseArrayOrValue(minDate),
       maxDate: parseArrayOrValue(maxDate),
+      // key: value, // seems like it works without reinstantiating picker every time value changes
     };
     const { mode } = this.state;
     if (mode === 'year') {
-      return <YearPicker key={ value } { ...pickerProps } />;
+      return <YearPicker { ...pickerProps } />;
     }
     if (mode === 'month') {
-      return <MonthPicker key={ value } { ...pickerProps } />;
+      return <MonthPicker { ...pickerProps } />;
     }
-    return <DayPicker key={ value } { ...pickerProps } />;
+    return <DayPicker { ...pickerProps } />;
   }
 
   switchToNextMode = () => {

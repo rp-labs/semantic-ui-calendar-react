@@ -16,11 +16,6 @@ import {
 export const DAYS_ON_PAGE = WEEKS_TO_DISPLAY * 7;
 
 class DayPicker extends React.Component {
-  /*
-    Note:
-      use it like this <DayPicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
   constructor(props) {
     super(props);
     this.state = {

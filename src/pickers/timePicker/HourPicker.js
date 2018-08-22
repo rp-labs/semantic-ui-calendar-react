@@ -13,11 +13,6 @@ import {
 } from './sharedFunctions';
 
 class HourPicker extends React.Component {
-  /*
-    Note:
-      use it like this <HourPicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
   constructor(props) {
     super(props);
     this.state = {

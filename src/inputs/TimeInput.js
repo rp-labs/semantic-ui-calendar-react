@@ -69,7 +69,7 @@ class TimeInput extends BaseInput {
       value: currentValue,
       onChange: this.handleSelect,
       timeFormat,
-      key: value,
+      // key: value, // seems like it works without reinstantiating picker every time value changes
     };
     if (this.state.mode === 'hour') {
       return <HourPicker { ...pickerProps } />;

@@ -15,11 +15,6 @@ import {
 const MINUTES_STEP = 5;
 
 class MinutePicker extends React.Component {
-  /*
-    Note:
-      use it like this <MinutePicker key={someInputValue} />
-      to make react create new instance when input value changes
-  */
   constructor(props) {
     super(props);
     this.state = {
