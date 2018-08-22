@@ -1,6 +1,12 @@
 import moment from 'moment';
 import _ from 'lodash';
 
+export const TIME_FORMAT = {
+  '24': 'HH:mm',
+  'AMPM': 'hh:mm A',
+  'ampm': 'hh:mm a',
+};
+
 /** Parse string, moment, Date.
  * 
  * Return unedfined on invalid input.

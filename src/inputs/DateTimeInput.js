@@ -13,14 +13,9 @@ import {
   parseValue,
   parseArrayOrValue,
   getInitializer,
+  TIME_FORMAT,
 } from './parse';
 import { getUnhandledProps } from '../lib';
-
-const TIME_FORMAT = {
-  '24': 'HH:mm',
-  'AMPM': 'hh:mm A',
-  'ampm': 'hh:mm a',
-};
 
 function getNextMode(currentMode) {
   if (currentMode === 'year') return 'month';

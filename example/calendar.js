@@ -1,14 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Form } from 'semantic-ui-react';
-// import {
-//   DateInput,
-//   TimeInput,
-//   DateTimeInput,
-//   DatesRangeInput,
-//   YearInput,
-//   MonthInput
-// } from '../src';
 import moment from 'moment';
 
 import YearInput from '../src/inputs/YearInput';
@@ -16,6 +8,7 @@ import MonthInput from '../src/inputs/MonthInput';
 import DateInput from '../src/inputs/DateInput';
 import DateTimeInput from '../src/inputs/DateTimeInput';
 import DatesRangeInput from '../src/inputs/DatesRangeInput';
+import TimeInput from '../src/inputs/TimeInput';
 
 moment.locale('en');
 
@@ -24,8 +17,8 @@ function App() {
     <div className="example-calendar-container">
       <h2>As text fields</h2>
       <DateTimeForm />
-      {/* <h2>Inline</h2>
-      <DateTimeFormInline /> */}
+      <h2>Inline</h2>
+      <DateTimeFormInline />
     </div>
   );
 }
@@ -72,14 +65,14 @@ class DateTimeForm extends React.Component {
           iconPosition="left"
           onChange={this.handleChange} />
         <br />
-        {/* <TimeInput
+        <TimeInput
           placeholder="Time"
           className="example-calendar-input"
           name="time"
           value={this.state.time}
           iconPosition="left"
           onChange={this.handleChange} />
-        <br /> */}
+        <br />
         <DateTimeInput
           timeFormat="ampm"
           placeholder="Date Time"
@@ -118,87 +111,87 @@ class DateTimeForm extends React.Component {
   }
 }
 
-// class DateTimeFormInline extends React.Component {
-//   constructor(props) {
-//     super(props);
+class DateTimeFormInline extends React.Component {
+  constructor(props) {
+    super(props);
 
-//     this.state = {
-//       year: '',
-//       month: '',
-//       date: '',
-//       time: '',
-//       dateTime: '',
-//       datesRange: ''
-//     };
-//   }
+    this.state = {
+      year: '',
+      month: '',
+      date: '',
+      time: '',
+      dateTime: '',
+      datesRange: ''
+    };
+  }
 
-//   handleYearChange = (event, { value }) => {
-//     this.setState({ year: value });
-//   }
+  handleYearChange = (event, { value }) => {
+    this.setState({ year: value });
+  }
 
-//   handleMonthChange = (event, { value }) => {
-//     this.setState({ month: value });
-//   }
+  handleMonthChange = (event, { value }) => {
+    this.setState({ month: value });
+  }
 
-//   handleDateChange = (event, { value }) => {
-//     this.setState({ date: value });
-//   }
+  handleDateChange = (event, { value }) => {
+    this.setState({ date: value });
+  }
 
-//   handleTimeChange = (event, { value }) => {
-//     this.setState({ time: value });
-//   }
+  handleTimeChange = (event, { value }) => {
+    this.setState({ time: value });
+  }
 
-//   handleDateTimeChange = (event, { value }) => {
-//     this.setState({ dateTime: value });
-//   }
+  handleDateTimeChange = (event, { value }) => {
+    this.setState({ dateTime: value });
+  }
 
-//   handleDatesRangeChange = (event, { value }) => {
-//     this.setState({ datesRange: value });
-//   }
+  handleDatesRangeChange = (event, { value }) => {
+    this.setState({ datesRange: value });
+  }
 
-//   render() {
-//     return (
-//       <Form>
-//         <DateInput
-//           disable={['17-05-2018', '21-05-2018']}
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.date}
-//           onChange={this.handleDateChange} />
-//         <br />
-//         <TimeInput
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.time}
-//           onChange={this.handleTimeChange} />
-//         <br />
-//         <DateTimeInput
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.dateTime}
-//           onChange={this.handleDateTimeChange} />
-//         <br />
-//         <DatesRangeInput
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.datesRange}
-//           onChange={this.handleDatesRangeChange} />
-//         <br />
-//         <YearInput
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.year}
-//           onChange={this.handleYearChange} />
-//         <br />
-//         <MonthInput
-//           inline
-//           className="example-calendar-input"
-//           value={this.state.month}
-//           onChange={this.handleMonthChange} />
-//       </Form>
-//     );
-//   }
-// }
+  render() {
+    return (
+      <Form>
+        <DateInput
+          disable={['17-05-2018', '21-05-2018']}
+          inline
+          className="example-calendar-input"
+          value={this.state.date}
+          onChange={this.handleDateChange} />
+        <br />
+        <TimeInput
+          inline
+          className="example-calendar-input"
+          value={this.state.time}
+          onChange={this.handleTimeChange} />
+        <br />
+        <DateTimeInput
+          inline
+          className="example-calendar-input"
+          value={this.state.dateTime}
+          onChange={this.handleDateTimeChange} />
+        <br />
+        <DatesRangeInput
+          inline
+          className="example-calendar-input"
+          value={this.state.datesRange}
+          onChange={this.handleDatesRangeChange} />
+        <br />
+        <YearInput
+          inline
+          className="example-calendar-input"
+          value={this.state.year}
+          onChange={this.handleYearChange} />
+        <br />
+        <MonthInput
+          inline
+          className="example-calendar-input"
+          value={this.state.month}
+          onChange={this.handleMonthChange} />
+      </Form>
+    );
+  }
+}
 
 ReactDOM.render(
   <App />,
