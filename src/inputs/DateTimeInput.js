@@ -99,7 +99,7 @@ class DateTimeInput extends BaseInput {
       disable: parseArrayOrValue(disable),
       minDate: parseArrayOrValue(minDate),
       maxDate: parseArrayOrValue(maxDate),
-      key: value,
+      // key: value, // seems like it works without reinstantiating picker every time value changes
     };
     const { mode } = this.state;
     if (mode === 'year') {

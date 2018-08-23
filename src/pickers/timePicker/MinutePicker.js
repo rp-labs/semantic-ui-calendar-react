@@ -39,7 +39,8 @@ class MinutePicker extends React.Component {
       Return position of a minute that should be displayed as active
       (position in array returned by `this.buildMinutes`).
     */
-    if (this.props.value) {
+    const { value } = this.props;
+    if (value && value.isSame(this.state.date, 'date')) {
       return Math.floor(this.props.value.minutes() / MINUTES_STEP);
     }
   }

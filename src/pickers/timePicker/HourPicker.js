@@ -36,7 +36,8 @@ class HourPicker extends React.Component {
       Return position of an hour that should be displayed as active
       (position in array returned by `this.buildHours`).
     */
-    if (this.props.value) {
+    const { value } = this.props;
+    if (value && value.isSame(this.state.date, 'date')) {
       return this.props.value.hour();
     }
   }

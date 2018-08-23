@@ -115,7 +115,7 @@ describe('<MinutePicker />: getActiveMinutePosition', () => {
 
   it('return active minute position when value is not multiple of 5', () => {
     const wrapper = shallow(<MinutePicker
-      value={moment({ hour: 10, minute: 17 })}
+      value={moment('2018-08-12 10:17')}
       initializeWith={date} />);
     /*
       [
@@ -129,7 +129,7 @@ describe('<MinutePicker />: getActiveMinutePosition', () => {
 
   it('return active minute position when value is multiple of 5', () => {
     const wrapper = shallow(<MinutePicker
-      value={moment({ hour: 10, minute: 20 })}
+      value={moment('2018-08-12 10:20')}
       initializeWith={date} />);
     /*
       [
@@ -143,7 +143,7 @@ describe('<MinutePicker />: getActiveMinutePosition', () => {
 
   it('return active minute position when value is 59', () => {
     const wrapper = shallow(<MinutePicker
-      value={moment({ hour: 10, minute: 59 })}
+      value={moment('2018-08-12 10:59')}
       initializeWith={date} />);
     /*
       [

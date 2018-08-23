@@ -124,7 +124,7 @@ describe('<HourPicker />: getActiveHourPosition', () => {
 
   it('return active hour', () => {
     const wrapper = shallow(<HourPicker
-      value={moment({ hour: 15 })}
+      value={moment('2018-08-12 15:00')}
       initializeWith={date} />);
     /*
       [
